@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">My Laundry</string>
+    <string name="tagline">Manajemen Laundry-mu</string>
+    <string name="login">Login</string>
+    <string name="dont_have_account">Belum punya akun? </string>
+    <string name="register">Register</string>
+    <string name="already_have_account">Sudah punya akun? </string>
 </resources>
