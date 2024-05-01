@@ -8,6 +8,10 @@ val CustomPurple = Color(4286865379)
 val CustomBlackPurple = Color(4281665102)
 val CustomBlue = Color(4287290835)
 val CustomWhite = Color(4294047227)
+val CustomLightPurple = Color(4293254906)
+val CustomLightRed = Color(4294962158)
+val CustomLightGreen = Color(4293393118)
+val CustomLightBlue = Color(4293521407)
 
 
 val Purple80 = Color(0xFFD0BCFF)
