@@ -57,7 +57,7 @@ fun HomeScreen() {
                         .padding(top = 25.dp, start = 30.dp)
                         .align(alignment = Alignment.TopStart),
                     text = "Laundry Ahlan Wa Sahlan",
-                    style = MaterialTheme.typography.bodyLarge,
+                    style = MaterialTheme.typography.titleMedium,
                     color = Color.White,
                 )
 
@@ -93,7 +93,7 @@ fun HomeScreen() {
                     Text(
                         modifier = Modifier
                             .padding(start = 20.dp, top = 10.dp),
-                        style = MaterialTheme.typography.bodyLarge,
+                        style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                         color = CustomBlackPurple,
                         text = "Total Penghasilan :"
@@ -103,7 +103,7 @@ fun HomeScreen() {
                         modifier = Modifier
                             .padding(start = 20.dp, top = 10.dp)
                             .align(Alignment.CenterStart),
-                        style = MaterialTheme.typography.titleLarge,
+                        style = MaterialTheme.typography.headlineMedium,
                         fontWeight = FontWeight.Bold,
                         color = CustomBlackPurple,
                         text = "Rp. 100.000.000,00"
@@ -234,7 +234,11 @@ fun HomeScreen() {
                     ),
                     shape = RoundedCornerShape(size = 15.dp)
                 ) {
-                    Text(text = "+ Transaksi", style = MaterialTheme.typography.labelMedium)
+                    Text(
+                        text = "+ Transaksi",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold
+                    )
                 }
 
             }

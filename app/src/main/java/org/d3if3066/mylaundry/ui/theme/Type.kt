@@ -32,6 +32,19 @@ val Typography = Typography(
         fontSize = 36.sp
     ),
 
+    headlineMedium = TextStyle(
+        fontFamily = Quicksand,
+        fontWeight = FontWeight.Bold,
+        fontSize = 30.sp
+    ),
+
+    titleLarge = TextStyle(
+        fontFamily = Quicksand,
+        fontWeight = FontWeight.Bold,
+        fontSize = 20.sp
+    ),
+
+
     titleMedium = TextStyle(
         fontFamily = Quicksand,
         fontWeight = FontWeight.Medium,
