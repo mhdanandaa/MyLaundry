@@ -11,6 +11,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavGraph
+import androidx.navigation.compose.rememberNavController
+import org.d3if3066.mylaundry.navigation.SetupNavGraph
 import org.d3if3066.mylaundry.ui.screen.HomeScreen
 import org.d3if3066.mylaundry.ui.screen.LoginScreen
 import org.d3if3066.mylaundry.ui.theme.CustomPurple
@@ -27,7 +30,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    HomeScreen()
+                    SetupNavGraph()
                 }
             }
         }
@@ -40,6 +43,6 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun GreetingPreview() {
     MyLaundryTheme {
-        LoginScreen()
+        SetupNavGraph()
     }
 }

@@ -25,6 +25,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import org.d3if3066.mylaundry.R
 import org.d3if3066.mylaundry.ui.theme.CustomBlackPurple
 import org.d3if3066.mylaundry.ui.theme.CustomLightBlue
@@ -34,7 +36,7 @@ import org.d3if3066.mylaundry.ui.theme.CustomLightRed
 import org.d3if3066.mylaundry.ui.theme.MyLaundryTheme
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(navHostController: NavHostController) {
     Surface () {
         Column (
             modifier = Modifier.fillMaxSize()
@@ -249,6 +251,6 @@ fun HomeScreen() {
 @Composable
 fun HomeScreenPreview() {
     MyLaundryTheme {
-        HomeScreen()
+        HomeScreen(navHostController = rememberNavController())
     }
 }

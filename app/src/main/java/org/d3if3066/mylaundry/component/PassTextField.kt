@@ -22,15 +22,15 @@ import org.d3if3066.mylaundry.ui.theme.unfocusedTextFieldText
 fun PassTextField(
     modifier: Modifier = Modifier,
     label: String,
-    trailing: String
+    trailing: String,
+    value: String,
+    onValueChange:(it:String)->Unit
 ) {
-    var password by remember { mutableStateOf("") }
-
 
     TextField(
         modifier = modifier,
-        value = password ,
-        onValueChange = {password = it},
+        value = value ,
+        onValueChange = {onValueChange(it)},
         label = {
             Text(
                 text = label,

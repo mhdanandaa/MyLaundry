@@ -19,16 +19,16 @@ import org.d3if3066.mylaundry.ui.theme.unfocusedTextFieldText
 fun CustomTextField(
     modifier: Modifier = Modifier,
     label: String,
-    trailing: String
+    trailing: String,
+    value:String,
+    onValueChange:(it:String)->Unit
 ) {
-    var gmail by remember { mutableStateOf("") }
-
 
 
     TextField(
         modifier = modifier,
-        value = gmail ,
-        onValueChange = {gmail= it},
+        value = value ,
+        onValueChange = {onValueChange(it)},
         label = {
             Text(
                 text = label,
