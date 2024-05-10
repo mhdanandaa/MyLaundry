@@ -9,4 +9,7 @@
     <string name="register_success_message">Registrasi Berhasil </string>
     <string name="login_success_message">Login Berhasil </string>
     <string name="login_failed_message">Login Gagal </string>
+    <string name="tambah_transaksi">Tambah Transaksi</string>
+    <string name="kembali">Kembali</string>
+    <string name="input_invalid_berat">Berat tidak boleh kosong atau 0</string>
 </resources>

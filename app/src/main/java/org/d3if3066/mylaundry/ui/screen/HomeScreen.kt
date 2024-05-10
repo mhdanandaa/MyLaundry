@@ -192,7 +192,9 @@ fun HomeScreen(navHostController: NavHostController) {
                     Button(
                         modifier = Modifier
                             .align(Alignment.BottomStart)
+                            .fillMaxWidth()
                             .size(160.dp, 120.dp)
+                            
                         ,
                         onClick = { /*TODO*/ },
                         colors = ButtonDefaults.buttonColors(

@@ -1,5 +1,6 @@
 package org.d3if3066.mylaundry.component
 
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -21,7 +22,8 @@ fun CustomTextField(
     label: String,
     trailing: String,
     value:String,
-    onValueChange:(it:String)->Unit
+    onValueChange:(it:String)->Unit,
+    keyboardOptions: KeyboardOptions
 ) {
 
 
@@ -29,6 +31,7 @@ fun CustomTextField(
         modifier = modifier,
         value = value ,
         onValueChange = {onValueChange(it)},
+        keyboardOptions = keyboardOptions,
         label = {
             Text(
                 text = label,

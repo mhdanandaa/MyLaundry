@@ -14,6 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavGraph
 import androidx.navigation.compose.rememberNavController
 import org.d3if3066.mylaundry.navigation.SetupNavGraph
+import org.d3if3066.mylaundry.ui.screen.AddTransScreen
 import org.d3if3066.mylaundry.ui.screen.HomeScreen
 import org.d3if3066.mylaundry.ui.screen.LoginScreen
 import org.d3if3066.mylaundry.ui.theme.CustomPurple
@@ -30,7 +31,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    SetupNavGraph()
+                    AddTransScreen(rememberNavController())
                 }
             }
         }
@@ -43,6 +44,6 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun GreetingPreview() {
     MyLaundryTheme {
-        SetupNavGraph()
+        AddTransScreen(rememberNavController())
     }
 }
