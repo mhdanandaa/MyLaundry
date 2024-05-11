@@ -12,4 +12,5 @@
     <string name="tambah_transaksi">Tambah Transaksi</string>
     <string name="kembali">Kembali</string>
     <string name="input_invalid_berat">Berat tidak boleh kosong atau 0</string>
+    <string name="tambah_pelanggan">Tambah Pelanggan</string>
 </resources>

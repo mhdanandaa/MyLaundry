@@ -5,6 +5,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import org.d3if3066.mylaundry.ui.screen.AddCustScreen
+import org.d3if3066.mylaundry.ui.screen.AddTransScreen
 import org.d3if3066.mylaundry.ui.screen.HomeScreen
 import org.d3if3066.mylaundry.ui.screen.LoginScreen
 import org.d3if3066.mylaundry.ui.screen.RegisterScreen
@@ -23,6 +25,12 @@ fun SetupNavGraph(navHostController: NavHostController = rememberNavController()
         }
         composable(route = Screen.Home.route) {
             HomeScreen(navHostController)
+        }
+        composable(route =  Screen.Transaction.route) {
+            AddTransScreen(navHostController)
+        }
+        composable(route = Screen.Customer.route) {
+            AddCustScreen(navHostController)
         }
     }
 }

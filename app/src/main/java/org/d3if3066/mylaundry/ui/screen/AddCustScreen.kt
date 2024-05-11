@@ -39,6 +39,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -47,8 +48,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import org.d3if3066.mylaundry.R
 import org.d3if3066.mylaundry.component.CustomTextField
-import org.d3if3066.mylaundry.component.PelangganDropDown
-import org.d3if3066.mylaundry.component.TipeDropDown
 import org.d3if3066.mylaundry.ui.theme.CustomBlackPurple
 import org.d3if3066.mylaundry.ui.theme.CustomPurple
 import org.d3if3066.mylaundry.ui.theme.CustomWhite
@@ -56,7 +55,7 @@ import org.d3if3066.mylaundry.ui.theme.MyLaundryTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddTransScreen(navController: NavHostController) {
+fun AddCustScreen(navController: NavHostController) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -70,7 +69,7 @@ fun AddTransScreen(navController: NavHostController) {
                             tint = Color.White)
                     }
                 },
-                title = { Text(text = stringResource(id = R.string.tambah_transaksi)) },
+                title = { Text(text = stringResource(id = R.string.tambah_pelanggan)) },
                 colors = TopAppBarDefaults.mediumTopAppBarColors(
                     //Untuk Backround
                     containerColor = CustomPurple,
@@ -79,15 +78,14 @@ fun AddTransScreen(navController: NavHostController) {
                 ))
         }
     ) {padding ->
-        ScreenContent(Modifier.padding(padding))
+        Content(Modifier.padding(padding))
     }
 }
 
 @Composable
-fun ScreenContent(modifier: Modifier) {
-    var berat by remember { mutableStateOf("") }
-    var tipeLaundry by remember { mutableStateOf("") }
-    var pelanggan by remember { mutableStateOf("") }
+fun Content(modifier: Modifier) {
+    var nama by remember { mutableStateOf("") }
+    var phoneNumber by remember { mutableStateOf("") }
 
     Surface {
         Column(
@@ -134,41 +132,37 @@ fun ScreenContent(modifier: Modifier) {
                     .padding(horizontal = 30.dp)
             ) {
                 Text(
-                    text = stringResource(R.string.tambah_transaksi),
+                    text = stringResource(R.string.tambah_pelanggan),
                     style = MaterialTheme.typography.headlineMedium,
                     color = CustomBlackPurple,
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,
                 )
-                PelangganDropDown(
-                    label = "Pelanggan",
-                    trailing = "" ,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 10.dp),
-                    value = pelanggan,
-                    onValueChange = {pelanggan = it}
-                )
-                Spacer(modifier = Modifier.height(20.dp))
-
                 CustomTextField(
-                    label = "Berat",
+                    label = "Nama",
                     trailing = "",
-                    modifier = Modifier.fillMaxWidth(),
-                    value = berat,
-                    onValueChange = {berat = it},
+                    modifier = Modifier.fillMaxWidth()
+                        .padding(top = 10.dp),
+                    value = nama,
+                    onValueChange = {nama = it},
                     keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Number,
+                        keyboardType = KeyboardType.Text,
+                        capitalization = KeyboardCapitalization.Words,
                         imeAction = ImeAction.Next
                     )
                 )
                 Spacer(modifier = Modifier.height(20.dp))
-                TipeDropDown(
-                    label = "Tipe Laundry",
+
+                CustomTextField(
+                    label = "Nomor WhatsApp",
                     trailing = "",
                     modifier = Modifier.fillMaxWidth(),
-                    value = tipeLaundry,
-                    onValueChange = { tipeLaundry = it }
+                    value = phoneNumber,
+                    onValueChange = {phoneNumber = it},
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number,
+                        imeAction = ImeAction.Done
+                    )
                 )
                 Spacer(modifier = Modifier.height(20.dp))
 
@@ -193,8 +187,8 @@ fun ScreenContent(modifier: Modifier) {
 
 @Preview(showBackground = true)
 @Composable
-fun TransScreenPreview() {
+fun AddCustScreenPreview() {
     MyLaundryTheme {
-        AddTransScreen(rememberNavController())
+        AddCustScreen(rememberNavController())
     }
 }

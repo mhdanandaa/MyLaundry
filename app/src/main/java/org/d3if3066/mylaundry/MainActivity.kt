@@ -31,7 +31,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    AddTransScreen(rememberNavController())
+                    SetupNavGraph()
                 }
             }
         }
@@ -44,6 +44,6 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun GreetingPreview() {
     MyLaundryTheme {
-        AddTransScreen(rememberNavController())
+        SetupNavGraph()
     }
 }

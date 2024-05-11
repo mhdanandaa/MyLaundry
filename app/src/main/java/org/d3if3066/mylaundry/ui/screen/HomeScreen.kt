@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import org.d3if3066.mylaundry.R
+import org.d3if3066.mylaundry.navigation.Screen
 import org.d3if3066.mylaundry.ui.theme.CustomBlackPurple
 import org.d3if3066.mylaundry.ui.theme.CustomLightBlue
 import org.d3if3066.mylaundry.ui.theme.CustomLightGreen
@@ -193,10 +194,8 @@ fun HomeScreen(navHostController: NavHostController) {
                         modifier = Modifier
                             .align(Alignment.BottomStart)
                             .fillMaxWidth()
-                            .size(160.dp, 120.dp)
-                            
-                        ,
-                        onClick = { /*TODO*/ },
+                            .size(160.dp, 120.dp),
+                        onClick = {navHostController.navigate(Screen.Customer.route)},
                         colors = ButtonDefaults.buttonColors(
                             containerColor = CustomLightBlue,
                             contentColor = CustomBlackPurple
@@ -231,7 +230,7 @@ fun HomeScreen(navHostController: NavHostController) {
                 Button(
                     modifier = Modifier.fillMaxWidth(),
                     contentPadding = PaddingValues(vertical = 13.dp),
-                    onClick = { /*TODO*/ },
+                    onClick = {navHostController.navigate(Screen.Transaction.route)},
                     colors = ButtonDefaults.buttonColors(
                         containerColor = CustomLightPurple,
                         contentColor = CustomBlackPurple
