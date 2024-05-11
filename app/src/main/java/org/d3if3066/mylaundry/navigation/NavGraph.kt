@@ -1,5 +1,7 @@
 package org.d3if3066.mylaundry.navigation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -12,6 +14,7 @@ import org.d3if3066.mylaundry.ui.screen.HomeScreen
 import org.d3if3066.mylaundry.ui.screen.LoginScreen
 import org.d3if3066.mylaundry.ui.screen.RegisterScreen
 
+@RequiresApi(Build.VERSION_CODES.N)
 @Composable
 fun SetupNavGraph(navHostController: NavHostController = rememberNavController()) {
     NavHost(

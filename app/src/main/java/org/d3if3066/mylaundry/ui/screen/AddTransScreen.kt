@@ -1,5 +1,8 @@
 package org.d3if3066.mylaundry.ui.screen
 
+import CustomDatePicker
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -29,6 +32,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -36,6 +40,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -48,12 +53,14 @@ import androidx.navigation.compose.rememberNavController
 import org.d3if3066.mylaundry.R
 import org.d3if3066.mylaundry.component.CustomTextField
 import org.d3if3066.mylaundry.component.PelangganDropDown
+import org.d3if3066.mylaundry.component.PriceTextField
 import org.d3if3066.mylaundry.component.TipeDropDown
 import org.d3if3066.mylaundry.ui.theme.CustomBlackPurple
 import org.d3if3066.mylaundry.ui.theme.CustomPurple
 import org.d3if3066.mylaundry.ui.theme.CustomWhite
 import org.d3if3066.mylaundry.ui.theme.MyLaundryTheme
 
+@RequiresApi(Build.VERSION_CODES.N)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddTransScreen(navController: NavHostController) {
@@ -83,11 +90,15 @@ fun AddTransScreen(navController: NavHostController) {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.N)
 @Composable
 fun ScreenContent(modifier: Modifier) {
     var berat by remember { mutableStateOf("") }
     var tipeLaundry by remember { mutableStateOf("") }
     var pelanggan by remember { mutableStateOf("") }
+    val price by remember { mutableDoubleStateOf(0.0) }
+
+    val context = LocalContext.current
 
     Surface {
         Column(
@@ -171,6 +182,27 @@ fun ScreenContent(modifier: Modifier) {
                     onValueChange = { tipeLaundry = it }
                 )
                 Spacer(modifier = Modifier.height(20.dp))
+                
+                CustomDatePicker(
+                    label = "Tanggal Pengantaran",
+                    contex = context
+                )
+                Spacer(modifier = Modifier.height(20.dp))
+
+                CustomDatePicker(
+                    "Tanggal Pengambilan",
+                    contex = context
+                )
+                Spacer(modifier = Modifier.height(20.dp))
+
+                PriceTextField(
+                    modifier = Modifier.fillMaxWidth(),
+                    label = "Total Harga",
+                    enabled = true,
+                    value = price,
+                    onValueChange = {}
+                )
+                Spacer(modifier = Modifier.height(20.dp))
 
                 Button(
                     modifier = Modifier.fillMaxWidth(),
@@ -184,6 +216,8 @@ fun ScreenContent(modifier: Modifier) {
                 ) {
                     Text(text = "Tambah", style = MaterialTheme.typography.labelMedium)
                 }
+                Spacer(modifier = Modifier.height(20.dp))
+
             }
         }
     }
@@ -191,6 +225,7 @@ fun ScreenContent(modifier: Modifier) {
 
 
 
+@RequiresApi(Build.VERSION_CODES.N)
 @Preview(showBackground = true)
 @Composable
 fun TransScreenPreview() {
