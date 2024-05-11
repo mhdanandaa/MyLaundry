@@ -55,7 +55,7 @@ import org.d3if3066.mylaundry.ui.theme.MyLaundryTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddCustScreen(navController: NavHostController) {
+fun AddServicesScreen(navController: NavHostController) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -69,7 +69,7 @@ fun AddCustScreen(navController: NavHostController) {
                             tint = Color.White)
                     }
                 },
-                title = { Text(text = stringResource(id = R.string.tambah_pelanggan)) },
+                title = { Text(text = stringResource(id = R.string.tambah_layanan)) },
                 colors = TopAppBarDefaults.mediumTopAppBarColors(
                     //Untuk Backround
                     containerColor = CustomPurple,
@@ -78,14 +78,14 @@ fun AddCustScreen(navController: NavHostController) {
                 ))
         }
     ) {padding ->
-        Content(Modifier.padding(padding))
+        ServicesContent(Modifier.padding(padding))
     }
 }
 
 @Composable
-fun Content(modifier: Modifier) {
-    var nama by remember { mutableStateOf("") }
-    var phoneNumber by remember { mutableStateOf("") }
+fun ServicesContent(modifier: Modifier) {
+    var serviceName by remember { mutableStateOf("") }
+    var price by remember { mutableStateOf("") }
 
     Surface {
         Column(
@@ -132,19 +132,19 @@ fun Content(modifier: Modifier) {
                     .padding(horizontal = 30.dp)
             ) {
                 Text(
-                    text = stringResource(R.string.tambah_pelanggan),
+                    text = stringResource(R.string.tambah_layanan),
                     style = MaterialTheme.typography.headlineMedium,
                     color = CustomBlackPurple,
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,
                 )
                 CustomTextField(
-                    label = "Nama",
+                    label = "Jenis Layanan",
                     trailing = "",
                     modifier = Modifier.fillMaxWidth()
                         .padding(top = 10.dp),
-                    value = nama,
-                    onValueChange = {nama = it},
+                    value = serviceName,
+                    onValueChange = {serviceName = it},
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Text,
                         capitalization = KeyboardCapitalization.Words,
@@ -154,11 +154,11 @@ fun Content(modifier: Modifier) {
                 Spacer(modifier = Modifier.height(20.dp))
 
                 CustomTextField(
-                    label = "Nomor WhatsApp",
+                    label = "Harga",
                     trailing = "",
                     modifier = Modifier.fillMaxWidth(),
-                    value = phoneNumber,
-                    onValueChange = {phoneNumber = it},
+                    value = price,
+                    onValueChange = {price = it},
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number,
                         imeAction = ImeAction.Done
@@ -187,8 +187,8 @@ fun Content(modifier: Modifier) {
 
 @Preview(showBackground = true)
 @Composable
-fun AddCustScreenPreview() {
+fun AddServiceScreenPreview() {
     MyLaundryTheme {
-        AddCustScreen(rememberNavController())
+        AddServicesScreen(rememberNavController())
     }
 }

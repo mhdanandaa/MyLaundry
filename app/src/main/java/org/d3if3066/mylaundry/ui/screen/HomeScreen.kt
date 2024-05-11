@@ -125,7 +125,7 @@ fun HomeScreen(navHostController: NavHostController) {
                             .align(Alignment.TopStart)
                             .size(160.dp, 120.dp)
                         ,
-                        onClick = { /*TODO*/ },
+                        onClick = {navHostController.navigate(Screen.Service.route)},
                         colors = ButtonDefaults.buttonColors(
                             containerColor = CustomLightRed,
                             contentColor = CustomBlackPurple

@@ -6,7 +6,7 @@ sealed class Screen(val route:String) {
     data object Home: Screen("homeScreen")
 
     data object Transaction: Screen("addTransScreen")
-
-    data object Customer: Screen("addCustScreen")
+    data object Customer: Screen("addCustsScreen")
+    data object Service: Screen("addServicesScreen")
 
 }

@@ -13,4 +13,5 @@
     <string name="kembali">Kembali</string>
     <string name="input_invalid_berat">Berat tidak boleh kosong atau 0</string>
     <string name="tambah_pelanggan">Tambah Pelanggan</string>
+    <string name="tambah_layanan">Tambah Layanan</string>
 </resources>
