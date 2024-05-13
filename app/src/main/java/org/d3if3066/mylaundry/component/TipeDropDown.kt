@@ -11,14 +11,12 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import org.d3if3066.mylaundry.ui.theme.CustomBlackPurple
-import org.d3if3066.mylaundry.ui.theme.MyLaundryTheme
 import org.d3if3066.mylaundry.ui.theme.focusedTextFieldText
 import org.d3if3066.mylaundry.ui.theme.textFieldContainer
 import org.d3if3066.mylaundry.ui.theme.unfocusedTextFieldText
@@ -83,17 +81,5 @@ fun TipeDropDown(
 
             }
         }
-    }
-}
-@Preview(showBackground = true)
-@Composable
-fun TipeDropDown() {
-    MyLaundryTheme {
-        PelangganDropDown(
-            label = "Label", // Provide a label for the dropdown
-            trailing = "Trailing", // Provide trailing text/icon for the dropdown
-            value = "Selected Value", // Provide the current selected value
-            onValueChange = { newValue -> /* Handle value change */ }
-        )
     }
 }
