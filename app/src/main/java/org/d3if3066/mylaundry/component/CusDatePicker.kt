@@ -26,7 +26,9 @@ import java.util.Date
 @Composable
 fun CustomDatePicker(
     label: String,
-    contex: Context
+    contex: Context,
+    value:String,
+    onValueChange:(it:String)->Unit
 ) {
     val year: Int
     val month: Int
@@ -38,11 +40,10 @@ fun CustomDatePicker(
     day = calendar.get(Calendar.DAY_OF_MONTH)
     calendar.time = Date()
 
-    val date = remember { mutableStateOf("") }
     val datePickerDialog = android.app.DatePickerDialog(
         contex,
         { _: DatePicker, selectedYear: Int, selectedMonth: Int, dayOfMonth: Int ->
-            date.value = "$dayOfMonth/$selectedMonth/$selectedYear"
+            onValueChange("$dayOfMonth/$selectedMonth/$selectedYear")
         }, year, month, day
     )
 
@@ -60,7 +61,7 @@ fun CustomDatePicker(
             contentAlignment = Alignment.CenterStart
         ) {
             Text(
-                text = "$label : ${date.value}" ,
+                text = "$label : ${value}" ,
                 style = MaterialTheme.typography.labelMedium,
                 color = CustomBlackPurple,
             )

@@ -17,6 +17,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import org.d3if3066.mylaundry.model.Customer
 import org.d3if3066.mylaundry.ui.theme.CustomBlackPurple
 import org.d3if3066.mylaundry.ui.theme.MyLaundryTheme
 import org.d3if3066.mylaundry.ui.theme.focusedTextFieldText
@@ -31,10 +32,10 @@ fun PelangganDropDown(
     label: String,
     trailing: String,
     value:String,
-    onValueChange:(it:String)->Unit
+    onValueChange:(it:String)->Unit,
+    customerList: List<Customer>
 ) {
     var expanded by remember { mutableStateOf(false) }
-    var pelanggan by remember { mutableStateOf("") }
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -45,8 +46,8 @@ fun PelangganDropDown(
             onExpandedChange = { expanded = it }
         ) {
             TextField(
-                value = pelanggan,
-                onValueChange = { pelanggan = it },
+                value = value,
+                onValueChange = { onValueChange(it) },
                 label = {
                     Text(
                         text = label,
@@ -68,18 +69,15 @@ fun PelangganDropDown(
                 expanded = expanded,
                 onDismissRequest = { expanded = false }
             ) {
-                DropdownMenuItem(
-                    text = { Text(text = "Radit")},
-                    onClick = {
-                        pelanggan = "Radit"
-                        expanded = false
-                    })
-                DropdownMenuItem(
-                    text = { Text(text = "Panjdi")},
-                    onClick = {
-                        pelanggan = "Pandji"
-                        expanded = false
-                    })
+                customerList.forEach{
+                    DropdownMenuItem(
+                        text = { Text(text = it.name)},
+                        onClick = {
+                            onValueChange(it.name)
+                            expanded = false
+                        })
+                }
+
 
             }
         }
@@ -93,7 +91,8 @@ fun LoginScreenPreview() {
             label = "Label", // Provide a label for the dropdown
             trailing = "Trailing", // Provide trailing text/icon for the dropdown
             value = "Selected Value", // Provide the current selected value
-            onValueChange = { newValue -> /* Handle value change */ }
+            onValueChange = {  },
+            customerList = emptyList()
         )
     }
 }

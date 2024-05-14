@@ -17,11 +17,12 @@ interface UserDao {
     suspend fun update(user: User)
 
     @Query("SELECT * FROM user ORDER BY laundryName")
-    fun getAllUser(): Flow<List<User>>
-
+    suspend fun getAllUser(): List<User>
     @Query("SELECT * FROM user WHERE id = :id")
     suspend fun getUserById(id: Long): User?
     @Query("SELECT * FROM user WHERE email = :email")
     suspend fun getUserByEmail(email: String): User?
+    @Query("SELECT * FROM user WHERE signedIn = true")
+    suspend fun getSignedInUser(): User?
 
 }

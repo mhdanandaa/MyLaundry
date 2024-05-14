@@ -1,4 +1,4 @@
-package org.d3if3066.mylaundry.ui.screen
+package org.d3if3066.mylaundry.ui.screen.register
 
 import android.widget.Toast
 import androidx.compose.foundation.Image
@@ -57,12 +57,15 @@ import org.d3if3066.mylaundry.ui.theme.MyLaundryTheme
 import org.d3if3066.mylaundry.util.ViewModelFactory
 
 @Composable
-fun LoginScreen(navHostController: NavHostController) {
+fun RegisterScreen(navHostController: NavHostController) {
     val context = LocalContext.current
     val db = MyLaundryDb.getInstance(context)
-    val factory = ViewModelFactory(db.dao)
-    val viewModel: LoginViewModel = viewModel(factory = factory)
+    val factory = ViewModelFactory(db.userDao)
+    val viewModel: RegisterViewModel = viewModel(factory = factory)
     val coroutineScope = rememberCoroutineScope()
+    var laundryName by remember {
+        mutableStateOf("")
+    }
     var email by remember {
         mutableStateOf("")
     }
@@ -115,7 +118,7 @@ fun LoginScreen(navHostController: NavHostController) {
                     modifier = Modifier
                         .padding(bottom = 10.dp)
                         .align(alignment = Alignment.BottomCenter),
-                    text = stringResource(R.string.login),
+                    text = stringResource(R.string.register),
                     style = MaterialTheme.typography.headlineLarge,
                     color = CustomBlackPurple,
                 )
@@ -130,11 +133,24 @@ fun LoginScreen(navHostController: NavHostController) {
                     .padding(horizontal = 30.dp)
             ) {
                 CustomTextField(
+                    label = "Laundry's name",
+                    trailing = "",
+                    modifier = Modifier.fillMaxWidth(),
+                    value = laundryName,
+                    onValueChange = {laundryName = it},
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Text,
+                        imeAction = ImeAction.Next
+                    )
+
+                )
+                Spacer(modifier = Modifier.height(20.dp))
+                CustomTextField(
                     label = "Email",
                     trailing = "",
                     modifier = Modifier.fillMaxWidth(),
                     value = email,
-                    onValueChange = {email= it},
+                    onValueChange = {email = it},
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Email,
                         imeAction = ImeAction.Next
@@ -146,8 +162,7 @@ fun LoginScreen(navHostController: NavHostController) {
                     trailing = "",
                     modifier = Modifier.fillMaxWidth(),
                     value = password,
-                    onValueChange = { password = it }
-                )
+                    onValueChange = { password = it })
                 Spacer(modifier = Modifier.height(20.dp))
 
                 Button(
@@ -155,17 +170,22 @@ fun LoginScreen(navHostController: NavHostController) {
                     contentPadding = PaddingValues(vertical = 13.dp),
                     onClick = {
                         coroutineScope.launch {
-                            if (viewModel.login(
-                                    email,
-                                    password
-                                )
-                            ) navHostController.navigate(Screen.Home.route)
-                            else Toast.makeText(
-                                context,
-                                context.getString(R.string.login_failed_message),
-                                Toast.LENGTH_SHORT
-                            ).show()
+                            if (viewModel.register(laundryName, email, password)) {
+                                Toast.makeText(
+                                    context,
+                                    context.getString(R.string.register_success_message),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                navHostController.navigate(Screen.Login.route)
+                            } else {
+                                Toast.makeText(
+                                    context,
+                                    context.getString(R.string.register_failed_message),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
                         }
+
                     },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = CustomBlackPurple,
@@ -180,13 +200,13 @@ fun LoginScreen(navHostController: NavHostController) {
                     modifier = Modifier.padding(top = 16.dp),
                     text = buildAnnotatedString {
                         withStyle(SpanStyle(color = CustomBlackPurple)) {
-                            append(stringResource(R.string.dont_have_account))
+                            append(stringResource(R.string.already_have_account))
                         }
                         withStyle(SpanStyle(color = CustomPurple)) {
-                            append(stringResource(id = R.string.register))
+                            append(stringResource(id = R.string.login))
                         }
                     },
-                    onClick = { navHostController.navigate(Screen.Register.route) },
+                    onClick = { navHostController.navigate(Screen.Login.route) },
                     style = MaterialTheme.typography.labelMedium
                 )
 
@@ -198,8 +218,8 @@ fun LoginScreen(navHostController: NavHostController) {
 
 @Preview(showBackground = true)
 @Composable
-fun LoginScreenPreview() {
+fun RegisterScreenPreview() {
     MyLaundryTheme {
-        LoginScreen(navHostController = rememberNavController())
+        RegisterScreen(navHostController = rememberNavController())
     }
 }

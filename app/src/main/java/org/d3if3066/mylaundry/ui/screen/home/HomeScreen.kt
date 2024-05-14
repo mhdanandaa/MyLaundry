@@ -1,4 +1,4 @@
-package org.d3if3066.mylaundry.ui.screen
+package org.d3if3066.mylaundry.ui.screen.home
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -17,17 +17,26 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import org.d3if3066.mylaundry.R
+import org.d3if3066.mylaundry.database.MyLaundryDb
+import org.d3if3066.mylaundry.model.User
 import org.d3if3066.mylaundry.navigation.Screen
 import org.d3if3066.mylaundry.ui.theme.CustomBlackPurple
 import org.d3if3066.mylaundry.ui.theme.CustomLightBlue
@@ -35,9 +44,20 @@ import org.d3if3066.mylaundry.ui.theme.CustomLightGreen
 import org.d3if3066.mylaundry.ui.theme.CustomLightPurple
 import org.d3if3066.mylaundry.ui.theme.CustomLightRed
 import org.d3if3066.mylaundry.ui.theme.MyLaundryTheme
+import org.d3if3066.mylaundry.util.ViewModelFactory
 
 @Composable
 fun HomeScreen(navHostController: NavHostController) {
+    val context = LocalContext.current
+    val db = MyLaundryDb.getInstance(context)
+    val factory = ViewModelFactory(db.userDao)
+    val viewModel: HomeViewModel = viewModel(factory = factory)
+    var user by remember {
+        mutableStateOf<User>(User(0,"Hallo","johndoe@gmail.com","123",true))
+    }
+    LaunchedEffect(key1 = true ){
+        user = viewModel.getSignedInUser()!!
+    }
     Surface () {
         Column (
             modifier = Modifier.fillMaxSize()
@@ -59,15 +79,16 @@ fun HomeScreen(navHostController: NavHostController) {
                     modifier = Modifier
                         .padding(top = 25.dp, start = 30.dp)
                         .align(alignment = Alignment.TopStart),
-                    text = "Laundry Ahlan Wa Sahlan",
-                    style = MaterialTheme.typography.titleMedium,
+                    text = "Laundry ${user.laundryName}",
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
                     color = Color.White,
                 )
 
                 Image(
                     modifier = Modifier
                         .align(alignment = Alignment.CenterEnd)
-                        .padding(end = 20.dp),
+                        .padding(end = 20.dp, top = 20.dp),
                     painter = painterResource(id = R.drawable.logo_laundry_home),
                     contentDescription = null,
                     contentScale = ContentScale.Crop
@@ -238,7 +259,7 @@ fun HomeScreen(navHostController: NavHostController) {
                     shape = RoundedCornerShape(size = 15.dp)
                 ) {
                     Text(
-                        text = "+ Transaksi",
+                        text = "+ Tambah Transaksi",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )

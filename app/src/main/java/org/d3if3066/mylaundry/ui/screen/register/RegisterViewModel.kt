@@ -1,4 +1,4 @@
-package org.d3if3066.mylaundry.ui.screen
+package org.d3if3066.mylaundry.ui.screen.register
 
 import android.app.Activity
 import android.widget.Toast

@@ -5,10 +5,11 @@
     <string name="dont_have_account">Belum punya akun? </string>
     <string name="register">Register</string>
     <string name="already_have_account">Sudah punya akun? </string>
-    <string name="register_failed_message">Registrasi Gagal </string>
-    <string name="register_success_message">Registrasi Berhasil </string>
-    <string name="login_success_message">Login Berhasil </string>
-    <string name="login_failed_message">Login Gagal </string>
+    <string name="register_failed_message">Registrasi Gagal :( </string>
+    <string name="register_success_message">Registrasi Berhasil :) </string>
+    <string name="login_success_message">Login Berhasil :) </string>
+    <string name="login_failed_message">Login Gagal :( </string>
+    <string name="data_added_success_message">Data berhasil ditambahkan :) </string>
     <string name="tambah_transaksi">Tambah Transaksi</string>
     <string name="kembali">Kembali</string>
     <string name="input_invalid_berat">Berat tidak boleh kosong atau 0</string>

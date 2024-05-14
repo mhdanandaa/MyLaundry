@@ -1,5 +1,6 @@
-package org.d3if3066.mylaundry.ui.screen
+package org.d3if3066.mylaundry.ui.screen.customer
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -31,11 +32,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -44,18 +47,23 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import kotlinx.coroutines.launch
 import org.d3if3066.mylaundry.R
 import org.d3if3066.mylaundry.component.CustomTextField
+import org.d3if3066.mylaundry.database.MyLaundryDb
+import org.d3if3066.mylaundry.ui.screen.login.LoginViewModel
 import org.d3if3066.mylaundry.ui.theme.CustomBlackPurple
 import org.d3if3066.mylaundry.ui.theme.CustomPurple
 import org.d3if3066.mylaundry.ui.theme.CustomWhite
 import org.d3if3066.mylaundry.ui.theme.MyLaundryTheme
+import org.d3if3066.mylaundry.util.ViewModelFactory
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddCustsScreen(navController: NavHostController) {
+fun AddCustomerScreen(navController: NavHostController) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -84,6 +92,12 @@ fun AddCustsScreen(navController: NavHostController) {
 
 @Composable
 fun CustsContent(modifier: Modifier) {
+    val context = LocalContext.current
+    val db = MyLaundryDb.getInstance(context)
+    val factory = ViewModelFactory(customerDao = db.customerDao)
+    val viewModel: AddCustomerViewModel = viewModel(factory = factory)
+    val coroutineScope = rememberCoroutineScope()
+
     var nama by remember { mutableStateOf("") }
     var phoneNumber by remember { mutableStateOf("") }
 
@@ -169,7 +183,17 @@ fun CustsContent(modifier: Modifier) {
                 Button(
                     modifier = Modifier.fillMaxWidth(),
                     contentPadding = PaddingValues(vertical = 13.dp),
-                    onClick = {},
+                    onClick = {
+                              coroutineScope.launch {
+                                  if(viewModel.createCustomer(nama,phoneNumber)){
+                                      Toast.makeText(
+                                          context,
+                                          context.getString(R.string.data_added_success_message),
+                                          Toast.LENGTH_SHORT
+                                      ).show()
+                                  }
+                              }
+                    },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = CustomBlackPurple,
                         contentColor = CustomWhite
@@ -189,6 +213,6 @@ fun CustsContent(modifier: Modifier) {
 @Composable
 fun AddCustScreenPreview() {
     MyLaundryTheme {
-        AddCustsScreen(rememberNavController())
+        AddCustomerScreen(rememberNavController())
     }
 }

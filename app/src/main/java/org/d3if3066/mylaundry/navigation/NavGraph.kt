@@ -7,12 +7,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import org.d3if3066.mylaundry.ui.screen.AddCustsScreen
-import org.d3if3066.mylaundry.ui.screen.AddServicesScreen
-import org.d3if3066.mylaundry.ui.screen.AddTransScreen
-import org.d3if3066.mylaundry.ui.screen.HomeScreen
-import org.d3if3066.mylaundry.ui.screen.LoginScreen
-import org.d3if3066.mylaundry.ui.screen.RegisterScreen
+import org.d3if3066.mylaundry.ui.screen.customer.AddCustomerScreen
+import org.d3if3066.mylaundry.ui.screen.home.HomeScreen
+import org.d3if3066.mylaundry.ui.screen.login.LoginScreen
+import org.d3if3066.mylaundry.ui.screen.register.RegisterScreen
+import org.d3if3066.mylaundry.ui.screen.service.AddServiceScreen
+import org.d3if3066.mylaundry.ui.screen.transaction.AddTransactionScreen
 
 @RequiresApi(Build.VERSION_CODES.N)
 @Composable
@@ -31,13 +31,13 @@ fun SetupNavGraph(navHostController: NavHostController = rememberNavController()
             HomeScreen(navHostController)
         }
         composable(route =  Screen.Transaction.route) {
-            AddTransScreen(navHostController)
+            AddTransactionScreen(navHostController)
         }
         composable(route = Screen.Customer.route) {
-            AddCustsScreen(navHostController)
+            AddCustomerScreen(navHostController)
         }
         composable(route = Screen.Service.route) {
-            AddServicesScreen(navHostController)
+            AddServiceScreen(navHostController)
         }
     }
 }
