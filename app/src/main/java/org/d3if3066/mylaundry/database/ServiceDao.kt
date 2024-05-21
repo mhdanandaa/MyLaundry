@@ -21,4 +21,7 @@ interface ServiceDao {
     suspend fun getServicerByName(name:String): Service?
     @Query("SELECT * FROM service ORDER BY name")
     fun getAllService(): Flow<List<Service>>
+
+    @Query("SELECT * FROM service WHERE id = :serviceId")
+    suspend fun getServiceById(serviceId: Long): Service?
 }

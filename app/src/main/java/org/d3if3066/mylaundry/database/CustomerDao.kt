@@ -20,4 +20,8 @@ interface CustomerDao {
     fun getAllCustomer(): Flow<List<Customer>>
     @Query("SELECT * FROM customer WHERE name = :name")
     suspend fun getCustomerByName(name:String): Customer?
+
+    // Add this function definition:
+    @Query("SELECT * FROM customer WHERE id = :customerId")
+    suspend fun getCustomerById(customerId: Long): Customer?
 }

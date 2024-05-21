@@ -20,12 +20,9 @@ fun PriceTextField(
     value:Double,
     onValueChange:(it:String)->Unit
 ) {
-    var weight by remember { mutableStateOf(0.0) }
-    var price by remember { mutableStateOf(0.0) }
-
         TextField(
-            value = (weight * price).toString(),
-            onValueChange = {},
+            value = value.toString(),
+            onValueChange = {onValueChange(it)},
             label = {
                 Text(
                     text = label,

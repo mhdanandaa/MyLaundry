@@ -1,15 +1,11 @@
 package org.d3if3066.mylaundry.ui.screen.transaction
 
-import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import org.d3if3066.mylaundry.database.CustomerDao
 import org.d3if3066.mylaundry.database.OrderDao
@@ -23,6 +19,11 @@ class AddTransactionViewModel(
     private val customerDao: CustomerDao,
     private val serviceDao: ServiceDao
 ) : ViewModel() {
+    val orderList: StateFlow<List<Order>> = orderDao.getOrder().stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000L),
+        initialValue = emptyList()
+    )
     val serviceList:StateFlow<List<Service>> = serviceDao.getAllService().stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000L),
@@ -61,4 +62,23 @@ class AddTransactionViewModel(
         )
         return true
     }
+    suspend fun getOrder(id: Long): Order? {
+        return orderDao.getOrderById(id)
+    }
+    fun getCustomerById(customerId: Long): StateFlow<Customer?> {
+        val customerFlow = MutableStateFlow<Customer?>(null)
+        viewModelScope.launch {
+            customerFlow.value = customerDao.getCustomerById(customerId)
+        }
+        return customerFlow
+    }
+    fun getServiceById(serviceId: Long): StateFlow<Service?> {
+        val serviceFlow = MutableStateFlow<Service?>(null)
+        viewModelScope.launch {
+            serviceFlow.value = serviceDao.getServiceById(serviceId)
+        }
+        return serviceFlow
+    }
+
 }
+

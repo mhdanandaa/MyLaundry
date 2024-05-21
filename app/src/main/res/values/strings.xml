@@ -15,4 +15,20 @@
     <string name="input_invalid_berat">Berat tidak boleh kosong atau 0</string>
     <string name="tambah_pelanggan">Tambah Pelanggan</string>
     <string name="tambah_layanan">Tambah Layanan</string>
+    <string name="list_kosong">Belum ada transaksi</string>
+    <string name="edit_transaksi">Edit Transaksi</string>
+    <string name="daftar_transaksi">Daftar Transaksi</string>
+    <string name="share">Kirim</string>
+    <string name="bagikan_template">Laundry Ahlan Wa Sahalan
+    \n\Jl. Ciganitri, Perumahan Permata Buah Batu 2m No.A 28
+    \n------------------------------------------------------
+    \n\Pelanggan atas nama : %1$s
+    \nBerat laundry : %2$s kg
+    \nTipe cucian : %3$s
+    \nTangal pengantaran : %4$s
+        \nTanggal selesai : %5$s
+    \nTotal harga : %6$,.2f
+    \n------------------------------------------------------
+    \nSilahkan cucian anda sudah dapat diambil ditempat
+    \n\Terima Kasih!</string>
 </resources>

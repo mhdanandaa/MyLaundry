@@ -1,8 +1,9 @@
 package org.d3if3066.mylaundry.ui.screen.transaction
 
 import CustomDatePicker
+import android.content.Context
+import android.content.Intent
 import android.os.Build
-import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
@@ -33,7 +34,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableDoubleStateOf
@@ -55,7 +55,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.launch
 import org.d3if3066.mylaundry.R
 import org.d3if3066.mylaundry.component.CustomTextField
@@ -63,13 +62,12 @@ import org.d3if3066.mylaundry.component.PelangganDropDown
 import org.d3if3066.mylaundry.component.PriceTextField
 import org.d3if3066.mylaundry.component.TipeDropDown
 import org.d3if3066.mylaundry.database.MyLaundryDb
-import org.d3if3066.mylaundry.model.Service
-import org.d3if3066.mylaundry.ui.screen.service.AddServiceViewModel
 import org.d3if3066.mylaundry.ui.theme.CustomBlackPurple
 import org.d3if3066.mylaundry.ui.theme.CustomPurple
 import org.d3if3066.mylaundry.ui.theme.CustomWhite
 import org.d3if3066.mylaundry.ui.theme.MyLaundryTheme
 import org.d3if3066.mylaundry.util.ViewModelFactory
+
 
 @RequiresApi(Build.VERSION_CODES.N)
 @OptIn(ExperimentalMaterial3Api::class)
@@ -124,7 +122,18 @@ fun ScreenContent(modifier: Modifier) {
     var pelanggan by remember { mutableStateOf("") }
     var startDate by remember { mutableStateOf("") }
     var endDate by remember { mutableStateOf("") }
-    val price by remember { mutableDoubleStateOf(0.0) }
+    var price by remember { mutableDoubleStateOf(0.0) }
+
+    val selectedService = serviceList.firstOrNull { it.name == tipeLaundry }
+
+
+    val totalPrice = if (selectedService != null) {
+        berat.toDouble() * selectedService.price
+    } else {
+        0.0
+    }
+
+    price = totalPrice
 
     Surface {
         Column(
@@ -268,17 +277,44 @@ fun ScreenContent(modifier: Modifier) {
                 }
                 Spacer(modifier = Modifier.height(20.dp))
 
+                Button(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentPadding = PaddingValues(vertical = 13.dp),
+                    onClick = {
+                        shareData(
+                            context = context,
+                            message = context.getString(R.string.bagikan_template, pelanggan,  berat, tipeLaundry, startDate, endDate, price)
+                        )
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = CustomBlackPurple,
+                        contentColor = CustomWhite
+                    ),
+                    shape = RoundedCornerShape(size = 4.dp)
+                ) {
+                    Text(text = "Kirim", style = MaterialTheme.typography.labelMedium)
+                }
+                Spacer(modifier = Modifier.height(20.dp))
+
             }
         }
     }
 }
-
+private fun shareData(context: Context, message: String) {
+    val shareIntent = Intent(Intent.ACTION_SEND).apply {
+        type = "text/plain"
+        putExtra(Intent.EXTRA_TEXT, message)
+    }
+    if(shareIntent.resolveActivity(context.packageManager) != null) {
+        context.startActivity(shareIntent)
+    }
+}
 
 @RequiresApi(Build.VERSION_CODES.N)
 @Preview(showBackground = true)
 @Composable
 fun TransScreenPreview() {
     MyLaundryTheme {
-        AddTransactionScreen(rememberNavController())
+//        AddTransactionScreen(rememberNavController())
     }
 }
