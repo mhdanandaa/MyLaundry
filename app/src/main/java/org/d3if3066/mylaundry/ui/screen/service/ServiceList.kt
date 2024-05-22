@@ -1,4 +1,7 @@
-package org.d3if3066.mylaundry.ui.screen.transaction
+package org.d3if3066.mylaundry.ui.screen.service
+
+import org.d3if3066.mylaundry.model.Service
+import org.d3if3066.mylaundry.ui.screen.transaction.AddTransactionViewModel
 
 import android.content.res.Configuration
 import androidx.compose.foundation.clickable
@@ -47,7 +50,7 @@ import org.d3if3066.mylaundry.util.ViewModelFactory
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TransactionListScreen(navController: NavHostController) {
+fun ServiceListScreen(navController: NavHostController) {
 
     Scaffold(
         topBar = {
@@ -62,7 +65,7 @@ fun TransactionListScreen(navController: NavHostController) {
                             tint = Color.White)
                     }
                 },
-                title = { Text(text = stringResource(id = R.string.daftar_transaksi)) },
+                title = { Text(text = stringResource(id = R.string.daftar_layanan)) },
                 colors = TopAppBarDefaults.mediumTopAppBarColors(
                     //Untuk Backround
                     containerColor = CustomPurple,
@@ -74,13 +77,13 @@ fun TransactionListScreen(navController: NavHostController) {
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    navController.navigate(Screen.Transaction.route)
+                    navController.navigate(Screen.Service.route)
                 },
                 containerColor = CustomPurple
             ) {
                 Icon(
                     imageVector = Icons.Filled.Add,
-                    contentDescription = stringResource(id = R.string.tambah_transaksi),
+                    contentDescription = stringResource(id = R.string.tambah_layanan),
                     tint = CustomWhite
                 )
             }
@@ -102,7 +105,7 @@ fun ScreenContent(modifier: Modifier, navController: NavHostController) {
         customerDao = db.customerDao
     )
     val viewModel: AddTransactionViewModel = viewModel(factory = factory)
-    val data by viewModel.orderList.collectAsState()
+    val data by viewModel.serviceList.collectAsState()
 
     if (data.isEmpty()) {
         Column(
@@ -112,7 +115,7 @@ fun ScreenContent(modifier: Modifier, navController: NavHostController) {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = stringResource(R.string.list_kosong))
+            Text(text = stringResource(R.string.list_kosong_service))
         }
 
     }
@@ -121,8 +124,8 @@ fun ScreenContent(modifier: Modifier, navController: NavHostController) {
             modifier = modifier.fillMaxSize(),
             contentPadding = PaddingValues(bottom = 84.dp)
         ) {
-            items(data) { order ->
-                ListItems(order = order, onClick = { /* Handle item click */ }, viewModel = viewModel)
+            items(data) {
+                ListItems(service = it) {}
                 Divider()
             }
         }
@@ -130,12 +133,7 @@ fun ScreenContent(modifier: Modifier, navController: NavHostController) {
 }
 
 @Composable
-fun ListItems(order: Order, onClick: () -> Unit, viewModel: AddTransactionViewModel) {
-    val customerState = viewModel.getCustomerById(order.customerId).collectAsState()
-    val customer = customerState.value
-
-    val serviceState = viewModel.getServiceById(order.serviceId).collectAsState()
-    val service = serviceState.value
+fun ListItems(service: Service, onClick: () -> Unit) {
 
     Column(
         modifier = Modifier
@@ -146,18 +144,10 @@ fun ListItems(order: Order, onClick: () -> Unit, viewModel: AddTransactionViewMo
 
         ) {
         Text(
-            text = customer?.name ?: "Loading..",
-            fontWeight = FontWeight.Bold
+            text = "Jenis Layanan : " +service.name,
+            fontWeight = FontWeight.Bold,
         )
-        Text(
-            text = service?.name ?: "Loading..",
-            fontWeight = FontWeight.Bold
-        )
-
-        Text(text = "Berat : " + order.weight.toString()+" KG")
-        Text(text = "Tanggal Masuk : " + order.startDate)
-        Text(text = "Tanggal Selesai : " + order.endDate)
-        Text(text = "Total Harga : " + order.price.toString())
+        Text(text = "Harga : "+service.price.toString())
     }
 
 }
@@ -167,6 +157,6 @@ fun ListItems(order: Order, onClick: () -> Unit, viewModel: AddTransactionViewMo
 @Composable
 fun MainScreenPreview() {
     MyLaundryTheme {
-        TransactionListScreen(rememberNavController())
+        ServiceListScreen(rememberNavController())
     }
 }

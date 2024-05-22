@@ -14,6 +14,7 @@ import org.d3if3066.mylaundry.ui.screen.home.HomeScreen
 import org.d3if3066.mylaundry.ui.screen.login.LoginScreen
 import org.d3if3066.mylaundry.ui.screen.register.RegisterScreen
 import org.d3if3066.mylaundry.ui.screen.service.AddServiceScreen
+import org.d3if3066.mylaundry.ui.screen.service.ServiceListScreen
 import org.d3if3066.mylaundry.ui.screen.transaction.AddTransactionScreen
 import org.d3if3066.mylaundry.ui.screen.transaction.TransactionListScreen
 
@@ -44,6 +45,9 @@ fun SetupNavGraph(navHostController: NavHostController = rememberNavController()
         }
         composable(route = Screen.TransactionList.route) {
             TransactionListScreen(navHostController)
+        }
+        composable(route = Screen.ServiceList.route) {
+            ServiceListScreen(navHostController)
         }
     }
 }

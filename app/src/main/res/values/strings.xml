@@ -31,4 +31,6 @@
     \n------------------------------------------------------
     \nSilahkan cucian anda sudah dapat diambil ditempat
     \n\Terima Kasih!</string>
+    <string name="daftar_layanan">Daftar Layanan</string>
+    <string name="list_kosong_service">Belum ada layanan</string>
 </resources>
