@@ -11,6 +11,7 @@ sealed class Screen(val route:String) {
 
     data object TransactionList: Screen("transactionList")
     data object ServiceList: Screen("serviceList")
+    data object CustomerList: Screen("customerList")
 
 
 }

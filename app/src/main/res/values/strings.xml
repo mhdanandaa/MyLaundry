@@ -19,18 +19,19 @@
     <string name="edit_transaksi">Edit Transaksi</string>
     <string name="daftar_transaksi">Daftar Transaksi</string>
     <string name="share">Kirim</string>
-    <string name="bagikan_template">Laundry Ahlan Wa Sahalan
-    \n\Jl. Ciganitri, Perumahan Permata Buah Batu 2m No.A 28
+    <string name="bagikan_template">Pelanggan terhormat,
     \n------------------------------------------------------
-    \n\Pelanggan atas nama : %1$s
+    \n\Nama : %1$s
     \nBerat laundry : %2$s kg
     \nTipe cucian : %3$s
     \nTangal pengantaran : %4$s
         \nTanggal selesai : %5$s
     \nTotal harga : %6$,.2f
     \n------------------------------------------------------
-    \nSilahkan cucian anda sudah dapat diambil ditempat
-    \n\Terima Kasih!</string>
+    \nTerima kasih telah mempercayai layanan laundry kami,
+    \n\Semoga hari Anda menyenangkan!</string>
     <string name="daftar_layanan">Daftar Layanan</string>
     <string name="list_kosong_service">Belum ada layanan</string>
+    <string name="daftar_pelanggan">Daftar Pelanggan</string>
+    <string name="list_kosong_pelanggan">Belum ada pelanggan</string>
 </resources>

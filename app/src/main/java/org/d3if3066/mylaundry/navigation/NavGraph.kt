@@ -10,6 +10,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import org.d3if3066.mylaundry.ui.screen.customer.AddCustomerScreen
+import org.d3if3066.mylaundry.ui.screen.customer.CustomerListScreen
 import org.d3if3066.mylaundry.ui.screen.home.HomeScreen
 import org.d3if3066.mylaundry.ui.screen.login.LoginScreen
 import org.d3if3066.mylaundry.ui.screen.register.RegisterScreen
@@ -48,6 +49,9 @@ fun SetupNavGraph(navHostController: NavHostController = rememberNavController()
         }
         composable(route = Screen.ServiceList.route) {
             ServiceListScreen(navHostController)
+        }
+        composable(route = Screen.CustomerList.route) {
+            CustomerListScreen(navHostController)
         }
     }
 }

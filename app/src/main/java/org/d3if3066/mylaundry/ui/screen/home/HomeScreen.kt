@@ -216,7 +216,7 @@ fun HomeScreen(navHostController: NavHostController) {
                             .align(Alignment.BottomStart)
                             .fillMaxWidth()
                             .size(160.dp, 120.dp),
-                        onClick = {navHostController.navigate(Screen.Customer.route)},
+                        onClick = {navHostController.navigate(Screen.CustomerList.route)},
                         colors = ButtonDefaults.buttonColors(
                             containerColor = CustomLightBlue,
                             contentColor = CustomBlackPurple
