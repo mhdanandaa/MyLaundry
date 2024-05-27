@@ -17,6 +17,8 @@ import org.d3if3066.mylaundry.ui.screen.register.RegisterScreen
 import org.d3if3066.mylaundry.ui.screen.service.AddServiceScreen
 import org.d3if3066.mylaundry.ui.screen.service.ServiceListScreen
 import org.d3if3066.mylaundry.ui.screen.transaction.AddTransactionScreen
+import org.d3if3066.mylaundry.ui.screen.transaction.DetailTransaction
+import org.d3if3066.mylaundry.ui.screen.transaction.KEY_ID_ORDER
 import org.d3if3066.mylaundry.ui.screen.transaction.TransactionListScreen
 
 @RequiresApi(Build.VERSION_CODES.N)
@@ -52,6 +54,16 @@ fun SetupNavGraph(navHostController: NavHostController = rememberNavController()
         }
         composable(route = Screen.CustomerList.route) {
             CustomerListScreen(navHostController)
+        }
+
+        composable(
+            route = Screen.DetailTransaction.route,
+            arguments = listOf(
+                navArgument(KEY_ID_ORDER) {type = NavType.LongType}
+            )
+        ) {navBackStackEntry ->
+            val id = navBackStackEntry.arguments?.getLong(KEY_ID_ORDER)
+            DetailTransaction(navHostController, id)
         }
     }
 }

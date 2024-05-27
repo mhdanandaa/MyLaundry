@@ -34,4 +34,8 @@
     <string name="list_kosong_service">Belum ada layanan</string>
     <string name="daftar_pelanggan">Daftar Pelanggan</string>
     <string name="list_kosong_pelanggan">Belum ada pelanggan</string>
+    <string name="invalid">Data tidak boleh kosong</string>
+    <string name="simpan">Simpan</string>
+    <string name="lainnya">Opsi lainnya</string>
+    <string name="hapus">Hapus Data</string>
 </resources>
