@@ -15,4 +15,23 @@
     <string name="input_invalid_berat">Berat tidak boleh kosong atau 0</string>
     <string name="tambah_pelanggan">Tambah Pelanggan</string>
     <string name="tambah_layanan">Tambah Layanan</string>
+    <string name="list_kosong">Belum ada transaksi</string>
+    <string name="edit_transaksi">Edit Transaksi</string>
+    <string name="daftar_transaksi">Daftar Transaksi</string>
+    <string name="share">Kirim</string>
+    <string name="bagikan_template">Pelanggan terhormat,
+    \n------------------------------------------------------
+    \n\Nama : %1$s
+    \nBerat laundry : %2$s kg
+    \nTipe cucian : %3$s
+    \nTangal pengantaran : %4$s
+        \nTanggal selesai : %5$s
+    \nTotal harga : %6$,.2f
+    \n------------------------------------------------------
+    \nTerima kasih telah mempercayai layanan laundry kami,
+    \n\Semoga hari Anda menyenangkan!</string>
+    <string name="daftar_layanan">Daftar Layanan</string>
+    <string name="list_kosong_service">Belum ada layanan</string>
+    <string name="daftar_pelanggan">Daftar Pelanggan</string>
+    <string name="list_kosong_pelanggan">Belum ada pelanggan</string>
 </resources>

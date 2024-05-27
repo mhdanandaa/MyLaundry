@@ -146,7 +146,7 @@ fun HomeScreen(navHostController: NavHostController) {
                             .align(Alignment.TopStart)
                             .size(160.dp, 120.dp)
                         ,
-                        onClick = {navHostController.navigate(Screen.Service.route)},
+                        onClick = {navHostController.navigate(Screen.ServiceList.route)},
                         colors = ButtonDefaults.buttonColors(
                             containerColor = CustomLightRed,
                             contentColor = CustomBlackPurple
@@ -181,7 +181,7 @@ fun HomeScreen(navHostController: NavHostController) {
                             .align(Alignment.TopEnd)
                             .size(160.dp, 120.dp)
                         ,
-                        onClick = { /*TODO*/ },
+                        onClick = {navHostController.navigate(Screen.TransactionList.route)},
                         colors = ButtonDefaults.buttonColors(
                             containerColor = CustomLightGreen,
                             contentColor = CustomBlackPurple
@@ -216,7 +216,7 @@ fun HomeScreen(navHostController: NavHostController) {
                             .align(Alignment.BottomStart)
                             .fillMaxWidth()
                             .size(160.dp, 120.dp),
-                        onClick = {navHostController.navigate(Screen.Customer.route)},
+                        onClick = {navHostController.navigate(Screen.CustomerList.route)},
                         colors = ButtonDefaults.buttonColors(
                             containerColor = CustomLightBlue,
                             contentColor = CustomBlackPurple

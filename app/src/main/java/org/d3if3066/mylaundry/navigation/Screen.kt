@@ -9,4 +9,9 @@ sealed class Screen(val route:String) {
     data object Customer: Screen("addCustsScreen")
     data object Service: Screen("addServicesScreen")
 
+    data object TransactionList: Screen("transactionList")
+    data object ServiceList: Screen("serviceList")
+    data object CustomerList: Screen("customerList")
+
+
 }
