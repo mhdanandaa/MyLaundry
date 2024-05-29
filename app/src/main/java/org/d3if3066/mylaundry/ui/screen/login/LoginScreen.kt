@@ -1,5 +1,6 @@
 package org.d3if3066.mylaundry.ui.screen.login
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
@@ -65,7 +66,7 @@ fun LoginScreen(navHostController: NavHostController) {
     val viewModel: LoginViewModel = viewModel(factory = factory)
     val coroutineScope = rememberCoroutineScope()
     LaunchedEffect(true) {
-        if (viewModel.checkIsSignedIn()){
+        if (viewModel.checkIsSignedIn()) {
             navHostController.navigate(Screen.Home.route)
         }
     }
@@ -140,7 +141,7 @@ fun LoginScreen(navHostController: NavHostController) {
                     trailing = {},
                     modifier = Modifier.fillMaxWidth(),
                     value = email,
-                    onValueChange = {email= it},
+                    onValueChange = { email = it },
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Email,
                         imeAction = ImeAction.Next
@@ -160,25 +161,33 @@ fun LoginScreen(navHostController: NavHostController) {
                     modifier = Modifier.fillMaxWidth(),
                     contentPadding = PaddingValues(vertical = 13.dp),
                     onClick = {
-                        coroutineScope.launch {
-                            if (viewModel.login(
-                                    email,
-                                    password
-                                )
-                            ) {
-                                Toast.makeText(
-                                    context,
-                                    context.getString(R.string.login_success_message),
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                                navHostController.navigate(Screen.Home.route)
-                            }
-                            else Toast.makeText(
+                        if (
+                            email == "" &&
+                            password == ""
+                        ) {
+                            Toast.makeText(
                                 context,
-                                context.getString(R.string.login_failed_message),
+                                "Data tidak boleh kososng",
                                 Toast.LENGTH_SHORT
                             ).show()
+                            return@Button
                         }
+                        if (viewModel.login(
+                                email,
+                                password
+                            )
+                        ) {
+                            Toast.makeText(
+                                context,
+                                context.getString(R.string.login_success_message),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            navHostController.navigate(Screen.Home.route)
+                        } else Toast.makeText(
+                            context,
+                            context.getString(R.string.login_failed_message),
+                            Toast.LENGTH_SHORT
+                        ).show()
                     },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = CustomBlackPurple,

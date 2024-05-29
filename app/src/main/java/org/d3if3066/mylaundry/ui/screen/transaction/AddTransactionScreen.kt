@@ -5,7 +5,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
@@ -38,7 +37,6 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableDoubleStateOf
@@ -77,11 +75,8 @@ import org.d3if3066.mylaundry.ui.theme.textFieldContainer
 import org.d3if3066.mylaundry.ui.theme.unfocusedTextFieldText
 import org.d3if3066.mylaundry.util.ViewModelFactory
 import java.text.DecimalFormat
-import java.text.SimpleDateFormat
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.util.Date
 
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -147,12 +142,23 @@ fun AddTransactionScreenContent(modifier: Modifier, navController: NavHostContro
 
 
     val totalPrice = if (selectedService != null) {
-        if (berat == "" ) 0.0 else berat.toDouble() * selectedService.price
+        if (berat == "") 0.0 else berat.toDouble() * selectedService.price
     } else {
         0.0
     }
 
     price = totalPrice
+
+    if (serviceList.isEmpty()){
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(text = "Buat layanan terlebih dahulu")
+        }
+        return
+    }
 
     Surface {
         Column(
@@ -293,8 +299,13 @@ fun AddTransactionScreenContent(modifier: Modifier, navController: NavHostContro
                     value = price,
                     onValueChange = { price = it.toDouble() },
                     supportingText = {
-                        Text(text = "Rp. "+ DecimalFormat("#,###.##").format(
-                            selectedService?.price ?: 0)+" × " + (if (berat == "") "0" else berat) + " Kg = Rp. "+ DecimalFormat("#,###.##").format(price))
+                        Text(
+                            text = "Rp. " + DecimalFormat("#,###.##").format(
+                                selectedService?.price ?: 0
+                            ) + " × " + (if (berat == "") "0" else berat) + " Kg = Rp. " + DecimalFormat(
+                                "#,###.##"
+                            ).format(price)
+                        )
                     }
                 )
                 Spacer(modifier = Modifier.height(20.dp))
@@ -303,6 +314,17 @@ fun AddTransactionScreenContent(modifier: Modifier, navController: NavHostContro
                     modifier = Modifier.fillMaxWidth(),
                     contentPadding = PaddingValues(vertical = 13.dp),
                     onClick = {
+                        if (
+                            pelanggan == "" &&
+                            berat == ""
+                        ) {
+                            Toast.makeText(
+                                context,
+                                "Data tidak boleh kososng",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            return@Button
+                        }
                         coroutineScope.launch {
                             if (viewModel.createTransaction(
                                     customerName = pelanggan,

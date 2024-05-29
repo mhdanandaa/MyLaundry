@@ -42,7 +42,7 @@ abstract class MyLaundryDb : RoomDatabase() {
                         context.applicationContext,
                         MyLaundryDb::class.java,
                         "mylaundry.db"
-                    ).build()
+                    ).allowMainThreadQueries().build()
                     INSTANCE = instance
                 }
                 return instance

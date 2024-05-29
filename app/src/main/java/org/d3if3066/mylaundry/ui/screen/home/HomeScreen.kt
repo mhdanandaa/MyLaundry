@@ -1,6 +1,5 @@
 package org.d3if3066.mylaundry.ui.screen.home
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -18,12 +17,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -36,13 +29,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import org.d3if3066.mylaundry.R
 import org.d3if3066.mylaundry.database.MyLaundryDb
-import org.d3if3066.mylaundry.model.OrderDetail
-import org.d3if3066.mylaundry.model.User
 import org.d3if3066.mylaundry.navigation.Screen
 import org.d3if3066.mylaundry.ui.theme.CustomBlackPurple
 import org.d3if3066.mylaundry.ui.theme.CustomLightBlue
@@ -56,29 +44,19 @@ import java.util.Calendar
 
 const val KEY_NEXT_PAGE = "nextPage"
 @Composable
-fun HomeScreen(navHostController: NavHostController,nextPage:String? = null) {
-    if (nextPage !== null) navHostController.navigate(nextPage)
+fun HomeScreen(navHostController: NavHostController) {
     val context = LocalContext.current
     val db = MyLaundryDb.getInstance(context)
     val factory = ViewModelFactory(userDao = db.userDao, orderDao = db.orderDao)
     val viewModel: HomeViewModel = viewModel(factory = factory)
     val listOfMonth = listOf("Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember")
-    var currentMonthRevenue by remember {
-        mutableStateOf(0)
-    }
-
-    var user by remember {
-        mutableStateOf<User>(User(0,"Hallo","johndoe@gmail.com","123",true))
-    }
+    val currentMonthRevenue = viewModel.getCurrentMonthRevenue() ?: 0
+    val user = viewModel.getSignedInUser()
     val c = Calendar.getInstance()
 
     val year = c.get(Calendar.YEAR)
     val month = c.get(Calendar.MONTH)
-    LaunchedEffect(true ){
-        user = viewModel.getSignedInUser()!!
-        currentMonthRevenue += viewModel.getCurrentMonthRevenue()
-    }
-    Surface () {
+    Surface {
         Column (
             modifier = Modifier.fillMaxSize()
         ) {
@@ -95,15 +73,17 @@ fun HomeScreen(navHostController: NavHostController,nextPage:String? = null) {
                     contentScale = ContentScale.FillBounds
                 )
 
-                Text(
-                    modifier = Modifier
-                        .padding(top = 25.dp, start = 30.dp)
-                        .align(alignment = Alignment.TopStart),
-                    text = "Laundry ${user.laundryName}",
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White,
-                )
+                if (user != null) {
+                    Text(
+                        modifier = Modifier
+                            .padding(top = 25.dp, start = 30.dp)
+                            .align(alignment = Alignment.TopStart),
+                        text = "Laundry ${user.laundryName}",
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White,
+                    )
+                }
 
                 Image(
                     modifier = Modifier

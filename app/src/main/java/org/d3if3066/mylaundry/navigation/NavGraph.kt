@@ -43,10 +43,8 @@ fun SetupNavGraph(navHostController: NavHostController = rememberNavController()
     var startDestination by remember {
         mutableStateOf(Screen.Home.route)
     }
-    LaunchedEffect(true) {
-        if (!viewModel.checkIsSignedIn()){
-            startDestination = Screen.Login.route
-        }
+    if (!viewModel.checkIsSignedIn()) {
+        startDestination = Screen.Login.route
     }
     NavHost(
         navController = navHostController,
@@ -58,16 +56,10 @@ fun SetupNavGraph(navHostController: NavHostController = rememberNavController()
         composable(route = Screen.Register.route) {
             RegisterScreen(navHostController)
         }
-        composable(
-            route = Screen.Home.route,
-            arguments = listOf(
-                navArgument(KEY_NEXT_PAGE) {type = NavType.StringType}
-            )
-        ) {navBackStackEntry ->
-            val nextPage = navBackStackEntry.arguments?.getString(KEY_NEXT_PAGE)
-            HomeScreen(navHostController, nextPage)
+        composable(route = Screen.Home.route,) {
+            HomeScreen(navHostController)
         }
-        composable(route =  Screen.AddTransaction.route) {
+        composable(route = Screen.AddTransaction.route) {
             AddTransactionScreen(navHostController)
         }
         composable(route = Screen.AddCustomer.route) {
@@ -89,9 +81,9 @@ fun SetupNavGraph(navHostController: NavHostController = rememberNavController()
         composable(
             route = Screen.DetailTransaction.route,
             arguments = listOf(
-                navArgument(KEY_ID_ORDER) {type = NavType.LongType}
+                navArgument(KEY_ID_ORDER) { type = NavType.LongType }
             )
-        ) {navBackStackEntry ->
+        ) { navBackStackEntry ->
             val id = navBackStackEntry.arguments?.getLong(KEY_ID_ORDER)
             DetailTransaction(navHostController, id)
         }

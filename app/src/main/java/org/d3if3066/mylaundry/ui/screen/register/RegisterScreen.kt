@@ -169,6 +169,18 @@ fun RegisterScreen(navHostController: NavHostController) {
                     modifier = Modifier.fillMaxWidth(),
                     contentPadding = PaddingValues(vertical = 13.dp),
                     onClick = {
+                        if (
+                            laundryName == "" &&
+                            email == "" &&
+                            password == ""
+                        ){
+                            Toast.makeText(
+                                context,
+                                "Data tidak boleh kososng",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            return@Button
+                        }
                         coroutineScope.launch {
                             if (viewModel.register(laundryName, email, password)) {
                                 Toast.makeText(
@@ -193,7 +205,7 @@ fun RegisterScreen(navHostController: NavHostController) {
                     ),
                     shape = RoundedCornerShape(size = 4.dp)
                 ) {
-                    Text(text = "Login", style = MaterialTheme.typography.labelMedium)
+                    Text(text = "Daftar", style = MaterialTheme.typography.labelMedium)
                 }
 
                 ClickableText(

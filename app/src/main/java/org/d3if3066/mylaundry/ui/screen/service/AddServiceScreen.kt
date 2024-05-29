@@ -183,6 +183,17 @@ fun ServicesContent(modifier: Modifier,navController: NavHostController) {
                     modifier = Modifier.fillMaxWidth(),
                     contentPadding = PaddingValues(vertical = 13.dp),
                     onClick = {
+                        if (
+                            serviceName == "" &&
+                            price == ""
+                        ) {
+                            Toast.makeText(
+                                context,
+                                "Data tidak boleh kososng",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            return@Button
+                        }
                         coroutineScope.launch {
                             if(viewModel.createService(name = serviceName, price = price.toInt())){
                                 Toast.makeText(

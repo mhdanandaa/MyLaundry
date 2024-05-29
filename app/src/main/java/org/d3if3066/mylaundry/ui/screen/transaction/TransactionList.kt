@@ -77,7 +77,7 @@ fun TransactionListScreen(navController: NavHostController) {
             TopAppBar(
                 navigationIcon = {
                     IconButton(
-                        onClick = { navController.popBackStack(route = Screen.Home.route, inclusive = false) }
+                        onClick = { navController.popBackStack() }
                     ) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
