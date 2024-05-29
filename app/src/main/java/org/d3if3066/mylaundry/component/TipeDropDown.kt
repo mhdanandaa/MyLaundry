@@ -25,6 +25,7 @@ import org.d3if3066.mylaundry.ui.theme.CustomBlackPurple
 import org.d3if3066.mylaundry.ui.theme.focusedTextFieldText
 import org.d3if3066.mylaundry.ui.theme.textFieldContainer
 import org.d3if3066.mylaundry.ui.theme.unfocusedTextFieldText
+import java.text.DecimalFormat
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -38,6 +39,12 @@ fun TipeDropDown(
     serviceList: List<Service>
 ) {
     var expanded by remember { mutableStateOf(false) }
+    serviceList.forEachIndexed { index, it ->
+        if (index == 0 && value == "") {
+            onValueChange(it.name)
+            return@forEachIndexed
+        } else return@forEachIndexed
+    }
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
@@ -67,7 +74,7 @@ fun TipeDropDown(
                     focusedContainerColor = MaterialTheme.colorScheme.textFieldContainer
                 ),
                 trailingIcon = {
-                    Icon(imageVector = Icons.Filled.ArrowDropDown, contentDescription = "Dropdown Icon")
+                    Icon(imageVector = Icons.Filled.ArrowDropDown, contentDescription = "Dropdown Icon", tint = CustomBlackPurple)
                 }
             )
 
@@ -75,9 +82,9 @@ fun TipeDropDown(
                 expanded = expanded,
                 onDismissRequest = { expanded = false }
             ) {
-                serviceList.forEach {
+                serviceList.forEachIndexed { index, it ->
                     DropdownMenuItem(
-                        text = { Text(text = it.name) },
+                        text = { Text(text = it.name + " ( Rp. "+ DecimalFormat("#,###.##").format(it.price)+" / Kg )") },
                         onClick = {
                             onValueChange(it.name)
                             expanded = false

@@ -6,12 +6,12 @@ import org.d3if3066.mylaundry.database.CustomerDao
 import org.d3if3066.mylaundry.database.OrderDao
 import org.d3if3066.mylaundry.database.ServiceDao
 import org.d3if3066.mylaundry.database.UserDao
-import org.d3if3066.mylaundry.ui.screen.customer.AddCustomerViewModel
+import org.d3if3066.mylaundry.ui.screen.customer.CustomerViewModel
 import org.d3if3066.mylaundry.ui.screen.home.HomeViewModel
 import org.d3if3066.mylaundry.ui.screen.login.LoginViewModel
 import org.d3if3066.mylaundry.ui.screen.register.RegisterViewModel
-import org.d3if3066.mylaundry.ui.screen.service.AddServiceViewModel
-import org.d3if3066.mylaundry.ui.screen.transaction.AddTransactionViewModel
+import org.d3if3066.mylaundry.ui.screen.service.ServiceViewModel
+import org.d3if3066.mylaundry.ui.screen.transaction.TransactionViewModel
 
 class ViewModelFactory(
     private val userDao: UserDao? = null,
@@ -26,13 +26,13 @@ class ViewModelFactory(
         } else if (modelClass.isAssignableFrom(RegisterViewModel::class.java)) {
             return RegisterViewModel(userDao!!) as T
         } else if (modelClass.isAssignableFrom(HomeViewModel::class.java)) {
-            return HomeViewModel(userDao!!) as T
-        } else if (modelClass.isAssignableFrom(AddCustomerViewModel::class.java)) {
-            return AddCustomerViewModel(customerDao!!) as T
-        } else if (modelClass.isAssignableFrom(AddServiceViewModel::class.java)) {
-            return AddServiceViewModel(serviceDao!!) as T
-        } else if (modelClass.isAssignableFrom(AddTransactionViewModel::class.java)) {
-            return AddTransactionViewModel(
+            return HomeViewModel(userDao!!,orderDao!!) as T
+        } else if (modelClass.isAssignableFrom(CustomerViewModel::class.java)) {
+            return CustomerViewModel(customerDao!!) as T
+        } else if (modelClass.isAssignableFrom(ServiceViewModel::class.java)) {
+            return ServiceViewModel(serviceDao!!) as T
+        } else if (modelClass.isAssignableFrom(TransactionViewModel::class.java)) {
+            return TransactionViewModel(
                 serviceDao = serviceDao!!,
                 orderDao = orderDao!!,
                 customerDao = customerDao!!

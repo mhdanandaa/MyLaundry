@@ -54,7 +54,6 @@ import kotlinx.coroutines.launch
 import org.d3if3066.mylaundry.R
 import org.d3if3066.mylaundry.component.CustomTextField
 import org.d3if3066.mylaundry.database.MyLaundryDb
-import org.d3if3066.mylaundry.ui.screen.customer.AddCustomerViewModel
 import org.d3if3066.mylaundry.ui.theme.CustomBlackPurple
 import org.d3if3066.mylaundry.ui.theme.CustomPurple
 import org.d3if3066.mylaundry.ui.theme.CustomWhite
@@ -86,16 +85,16 @@ fun AddServiceScreen(navController: NavHostController) {
                 ))
         }
     ) {padding ->
-        ServicesContent(Modifier.padding(padding))
+        ServicesContent(Modifier.padding(padding),navController)
     }
 }
 
 @Composable
-fun ServicesContent(modifier: Modifier) {
+fun ServicesContent(modifier: Modifier,navController: NavHostController) {
     val context = LocalContext.current
     val db = MyLaundryDb.getInstance(context)
     val factory = ViewModelFactory(serviceDao = db.serviceDao)
-    val viewModel: AddServiceViewModel = viewModel(factory = factory)
+    val viewModel: ServiceViewModel = viewModel(factory = factory)
     val coroutineScope = rememberCoroutineScope()
 
     var serviceName by remember { mutableStateOf("") }
@@ -154,7 +153,7 @@ fun ServicesContent(modifier: Modifier) {
                 )
                 CustomTextField(
                     label = "Jenis Layanan",
-                    trailing = "",
+                    trailing = {},
                     modifier = Modifier.fillMaxWidth()
                         .padding(top = 10.dp),
                     value = serviceName,
@@ -169,7 +168,7 @@ fun ServicesContent(modifier: Modifier) {
 
                 CustomTextField(
                     label = "Harga",
-                    trailing = "",
+                    trailing = {},
                     modifier = Modifier.fillMaxWidth(),
                     value = price,
                     onValueChange = {price = it},
@@ -191,6 +190,7 @@ fun ServicesContent(modifier: Modifier) {
                                     context.getString(R.string.data_added_success_message),
                                     Toast.LENGTH_SHORT
                                 ).show()
+                                navController.popBackStack()
                             }
                         }
                     },

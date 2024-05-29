@@ -16,7 +16,7 @@ import org.d3if3066.mylaundry.ui.theme.unfocusedTextFieldText
 fun CustomTextField(
     modifier: Modifier = Modifier,
     label: String,
-    trailing: String,
+    trailing: @Composable() (() -> Unit)? ,
     value:String,
     onValueChange:(it:String)->Unit,
     keyboardOptions: KeyboardOptions
@@ -26,6 +26,7 @@ fun CustomTextField(
     TextField(
         modifier = modifier,
         value = value ,
+        trailingIcon =  trailing ,
         onValueChange = {onValueChange(it)},
         keyboardOptions = keyboardOptions,
         label = {
@@ -41,6 +42,7 @@ fun CustomTextField(
             unfocusedContainerColor = MaterialTheme.colorScheme.textFieldContainer,
             focusedContainerColor = MaterialTheme.colorScheme.textFieldContainer
         ),
+
 
         )
 }

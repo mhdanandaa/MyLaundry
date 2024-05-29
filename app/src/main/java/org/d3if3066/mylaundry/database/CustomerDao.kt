@@ -18,10 +18,13 @@ interface CustomerDao {
 
     @Query("SELECT * FROM customer")
     fun getAllCustomer(): Flow<List<Customer>>
-    @Query("SELECT * FROM customer WHERE name = :name")
+    @Query("SELECT * FROM customer WHERE LOWER(name) = LOWER(:name)")
     suspend fun getCustomerByName(name:String): Customer?
 
     // Add this function definition:
     @Query("SELECT * FROM customer WHERE id = :customerId")
     suspend fun getCustomerById(customerId: Long): Customer?
+
+    @Query("DELETE FROM `customer` WHERE id = :id")
+    suspend fun deleteCustomerById(id: Long):Int
 }

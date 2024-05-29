@@ -24,4 +24,7 @@ interface ServiceDao {
 
     @Query("SELECT * FROM service WHERE id = :serviceId")
     suspend fun getServiceById(serviceId: Long): Service?
+
+    @Query("DELETE FROM `service` WHERE id = :id")
+    suspend fun deleteServiceById(id: Long):Int
 }

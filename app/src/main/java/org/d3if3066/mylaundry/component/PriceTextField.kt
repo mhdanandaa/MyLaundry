@@ -11,27 +11,35 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import org.d3if3066.mylaundry.ui.theme.CustomBlackPurple
+import java.text.DecimalFormat
 
 @Composable
 fun PriceTextField(
     modifier: Modifier = Modifier,
     label: String,
     enabled: Boolean,
-    value:Double,
-    onValueChange:(it:String)->Unit
+    value: Double,
+    onValueChange: (it: String) -> Unit,
+    supportingText:  @Composable() (() -> Unit)?
 ) {
-        TextField(
-            value = value.toString(),
-            onValueChange = {onValueChange(it)},
-            label = {
-                Text(
-                    text = label,
-                    style = MaterialTheme.typography.labelMedium,
-                    color = CustomBlackPurple
-                )
-            },
-            enabled = false,
-            modifier = Modifier.fillMaxWidth()
-        )
+    val dec = DecimalFormat("#,###.##")
+    TextField(
+        supportingText = supportingText,
+        value = dec.format(value),
+        onValueChange = { onValueChange(it) },
+        label = {
+            Text(
+                text = label,
+                style = MaterialTheme.typography.labelMedium,
+//                    color = CustomBlackPurple
+            )
+        },
+        prefix = {
+            Text(text = "Rp.")
+        },
+        enabled = false,
+        modifier = Modifier.fillMaxWidth(),
+
+    )
 
 }

@@ -11,6 +11,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -31,23 +32,37 @@ fun PelangganDropDown(
     modifier: Modifier = Modifier,
     label: String,
     trailing: String,
-    value:String,
-    onValueChange:(it:String)->Unit,
+    value: String,
+    onValueChange: (it: String) -> Unit,
     customerList: List<Customer>
 ) {
     var expanded by remember { mutableStateOf(false) }
+    val customerListString = customerList.map { customer: Customer -> customer.name }
+    var matchedCustomer by remember {
+        mutableStateOf(customerListString)
+    }
 
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
         ExposedDropdownMenuBox(
-            expanded = expanded,
-            onExpandedChange = { expanded = it }
+            expanded = if (matchedCustomer.isNotEmpty()) expanded else false,
+            onExpandedChange = {
+                if (matchedCustomer.isNotEmpty())
+                 expanded = it
+                else expanded = false
+            }
         ) {
             TextField(
                 value = value,
-                onValueChange = { onValueChange(it) },
+                onValueChange = {
+
+                    matchedCustomer = cariKataDalamList(it, customerListString)
+                    if (matchedCustomer.isNotEmpty()) expanded = true
+                    else expanded = false
+                    onValueChange(it)
+                },
                 label = {
                     Text(
                         text = label,
@@ -55,8 +70,10 @@ fun PelangganDropDown(
                         color = CustomBlackPurple
                     )
                 },
-                readOnly = true,
-                modifier = Modifier.menuAnchor().then(modifier),
+//                readOnly = true,
+                modifier = Modifier
+                    .menuAnchor()
+                    .then(modifier),
                 colors = TextFieldDefaults.colors(
                     unfocusedPlaceholderColor = MaterialTheme.colorScheme.unfocusedTextFieldText,
                     focusedPlaceholderColor = MaterialTheme.colorScheme.focusedTextFieldText,
@@ -69,11 +86,11 @@ fun PelangganDropDown(
                 expanded = expanded,
                 onDismissRequest = { expanded = false }
             ) {
-                customerList.forEach{
+                matchedCustomer.forEach {
                     DropdownMenuItem(
-                        text = { Text(text = it.name)},
+                        text = { Text(text = it) },
                         onClick = {
-                            onValueChange(it.name)
+                            onValueChange(it)
                             expanded = false
                         })
                 }
@@ -83,6 +100,13 @@ fun PelangganDropDown(
         }
     }
 }
+
+fun cariKataDalamList(kataDicari: String, daftarKata: List<String>): List<String> {
+    if (kataDicari == "") return emptyList()
+    val regex = Regex("\\b.*$kataDicari.*\\b", RegexOption.IGNORE_CASE)
+    return daftarKata.filter { regex.containsMatchIn(it) }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun LoginScreenPreview() {
@@ -91,7 +115,7 @@ fun LoginScreenPreview() {
             label = "Label", // Provide a label for the dropdown
             trailing = "Trailing", // Provide trailing text/icon for the dropdown
             value = "Selected Value", // Provide the current selected value
-            onValueChange = {  },
+            onValueChange = { },
             customerList = emptyList()
         )
     }

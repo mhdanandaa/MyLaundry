@@ -54,7 +54,6 @@ import kotlinx.coroutines.launch
 import org.d3if3066.mylaundry.R
 import org.d3if3066.mylaundry.component.CustomTextField
 import org.d3if3066.mylaundry.database.MyLaundryDb
-import org.d3if3066.mylaundry.ui.screen.login.LoginViewModel
 import org.d3if3066.mylaundry.ui.theme.CustomBlackPurple
 import org.d3if3066.mylaundry.ui.theme.CustomPurple
 import org.d3if3066.mylaundry.ui.theme.CustomWhite
@@ -86,16 +85,16 @@ fun AddCustomerScreen(navController: NavHostController) {
                 ))
         }
     ) {padding ->
-        CustsContent(Modifier.padding(padding))
+        CustsContent(Modifier.padding(padding),navController)
     }
 }
 
 @Composable
-fun CustsContent(modifier: Modifier) {
+fun CustsContent(modifier: Modifier,navController: NavHostController) {
     val context = LocalContext.current
     val db = MyLaundryDb.getInstance(context)
     val factory = ViewModelFactory(customerDao = db.customerDao)
-    val viewModel: AddCustomerViewModel = viewModel(factory = factory)
+    val viewModel: CustomerViewModel = viewModel(factory = factory)
     val coroutineScope = rememberCoroutineScope()
 
     var nama by remember { mutableStateOf("") }
@@ -154,7 +153,7 @@ fun CustsContent(modifier: Modifier) {
                 )
                 CustomTextField(
                     label = "Nama",
-                    trailing = "",
+                    trailing = {},
                     modifier = Modifier.fillMaxWidth()
                         .padding(top = 10.dp),
                     value = nama,
@@ -169,7 +168,7 @@ fun CustsContent(modifier: Modifier) {
 
                 CustomTextField(
                     label = "Nomor WhatsApp",
-                    trailing = "",
+                    trailing = {},
                     modifier = Modifier.fillMaxWidth(),
                     value = phoneNumber,
                     onValueChange = {phoneNumber = it},
@@ -192,6 +191,7 @@ fun CustsContent(modifier: Modifier) {
                                           Toast.LENGTH_SHORT
                                       ).show()
                                   }
+                                  navController.popBackStack()
                               }
                     },
                     colors = ButtonDefaults.buttonColors(

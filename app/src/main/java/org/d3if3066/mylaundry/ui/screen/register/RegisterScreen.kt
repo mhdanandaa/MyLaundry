@@ -134,7 +134,7 @@ fun RegisterScreen(navHostController: NavHostController) {
             ) {
                 CustomTextField(
                     label = "Laundry's name",
-                    trailing = "",
+                    trailing = {},
                     modifier = Modifier.fillMaxWidth(),
                     value = laundryName,
                     onValueChange = {laundryName = it},
@@ -147,7 +147,7 @@ fun RegisterScreen(navHostController: NavHostController) {
                 Spacer(modifier = Modifier.height(20.dp))
                 CustomTextField(
                     label = "Email",
-                    trailing = "",
+                    trailing = {},
                     modifier = Modifier.fillMaxWidth(),
                     value = email,
                     onValueChange = {email = it},

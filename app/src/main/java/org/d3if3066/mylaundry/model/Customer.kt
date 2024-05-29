@@ -9,5 +9,5 @@ data class Customer(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0L,
     val name: String,
-    val phone: String? = null,
+    var phone: String? = null,
 )

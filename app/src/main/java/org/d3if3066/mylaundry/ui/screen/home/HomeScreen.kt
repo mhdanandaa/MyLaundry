@@ -1,5 +1,6 @@
 package org.d3if3066.mylaundry.ui.screen.home
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -18,6 +19,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -34,8 +36,12 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.d3if3066.mylaundry.R
 import org.d3if3066.mylaundry.database.MyLaundryDb
+import org.d3if3066.mylaundry.model.OrderDetail
 import org.d3if3066.mylaundry.model.User
 import org.d3if3066.mylaundry.navigation.Screen
 import org.d3if3066.mylaundry.ui.theme.CustomBlackPurple
@@ -45,18 +51,32 @@ import org.d3if3066.mylaundry.ui.theme.CustomLightPurple
 import org.d3if3066.mylaundry.ui.theme.CustomLightRed
 import org.d3if3066.mylaundry.ui.theme.MyLaundryTheme
 import org.d3if3066.mylaundry.util.ViewModelFactory
+import java.text.DecimalFormat
+import java.util.Calendar
 
+const val KEY_NEXT_PAGE = "nextPage"
 @Composable
-fun HomeScreen(navHostController: NavHostController) {
+fun HomeScreen(navHostController: NavHostController,nextPage:String? = null) {
+    if (nextPage !== null) navHostController.navigate(nextPage)
     val context = LocalContext.current
     val db = MyLaundryDb.getInstance(context)
-    val factory = ViewModelFactory(db.userDao)
+    val factory = ViewModelFactory(userDao = db.userDao, orderDao = db.orderDao)
     val viewModel: HomeViewModel = viewModel(factory = factory)
+    val listOfMonth = listOf("Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember")
+    var currentMonthRevenue by remember {
+        mutableStateOf(0)
+    }
+
     var user by remember {
         mutableStateOf<User>(User(0,"Hallo","johndoe@gmail.com","123",true))
     }
-    LaunchedEffect(key1 = true ){
+    val c = Calendar.getInstance()
+
+    val year = c.get(Calendar.YEAR)
+    val month = c.get(Calendar.MONTH)
+    LaunchedEffect(true ){
         user = viewModel.getSignedInUser()!!
+        currentMonthRevenue += viewModel.getCurrentMonthRevenue()
     }
     Surface () {
         Column (
@@ -125,13 +145,24 @@ fun HomeScreen(navHostController: NavHostController) {
 
                     Text(
                         modifier = Modifier
-                            .padding(start = 20.dp, top = 10.dp)
+                            .padding(start = 20.dp)
                             .align(Alignment.CenterStart),
                         style = MaterialTheme.typography.headlineMedium,
                         fontWeight = FontWeight.Bold,
                         color = CustomBlackPurple,
-                        text = "Rp. 100.000.000,00"
+                        text = "Rp. "+ DecimalFormat("#,###.##").format(currentMonthRevenue),
                     )
+
+                    Text(
+                        modifier = Modifier
+                            .padding(start = 20.dp, bottom = 10.dp)
+                            .align(Alignment.BottomStart),
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Medium,
+                        color = CustomBlackPurple,
+                        text = "Penghasilan pada bulan "+listOfMonth[month]+" "+year
+                    )
+
                 }
 
                 Box(
@@ -174,47 +205,10 @@ fun HomeScreen(navHostController: NavHostController) {
                         }
 
                     }
-
-                    //Button Riwayat
-                    Button(
-                        modifier = Modifier
-                            .align(Alignment.TopEnd)
-                            .size(160.dp, 120.dp)
-                        ,
-                        onClick = {navHostController.navigate(Screen.TransactionList.route)},
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = CustomLightGreen,
-                            contentColor = CustomBlackPurple
-                        ),
-                        shape = RoundedCornerShape(size = 15.dp)
-                    ){
-                        Column (
-                            verticalArrangement = Arrangement.Center,
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ){
-                            Image(
-                                modifier = Modifier.size(70.dp),
-                                painter = painterResource(id = R.drawable.riwayat),
-                                contentDescription = null,
-                                contentScale = ContentScale.Crop,
-                            )
-
-                            Text(
-                                modifier = Modifier,
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.Bold,
-                                color = CustomBlackPurple,
-                                text = "Riwayat"
-                            )
-                        }
-
-                    }
-
                     // Button Pelanggan
                     Button(
                         modifier = Modifier
-                            .align(Alignment.BottomStart)
-                            .fillMaxWidth()
+                            .align(Alignment.TopEnd)
                             .size(160.dp, 120.dp),
                         onClick = {navHostController.navigate(Screen.CustomerList.route)},
                         colors = ButtonDefaults.buttonColors(
@@ -244,6 +238,42 @@ fun HomeScreen(navHostController: NavHostController) {
                         }
 
                     }
+                    //Button Riwayat
+                    Button(
+                        modifier = Modifier
+                            .align(Alignment.BottomStart)
+                            .fillMaxWidth()
+                            .size(160.dp, 120.dp),
+                        onClick = {navHostController.navigate(Screen.TransactionList.route)},
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = CustomLightGreen,
+                            contentColor = CustomBlackPurple
+                        ),
+                        shape = RoundedCornerShape(size = 15.dp)
+                    ){
+                        Column (
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ){
+                            Image(
+                                modifier = Modifier.size(70.dp),
+                                painter = painterResource(id = R.drawable.riwayat),
+                                contentDescription = null,
+                                contentScale = ContentScale.Crop,
+                            )
+
+                            Text(
+                                modifier = Modifier,
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.Bold,
+                                color = CustomBlackPurple,
+                                text = "Riwayat"
+                            )
+                        }
+
+                    }
+
+
                 }
 
 
@@ -251,7 +281,7 @@ fun HomeScreen(navHostController: NavHostController) {
                 Button(
                     modifier = Modifier.fillMaxWidth(),
                     contentPadding = PaddingValues(vertical = 13.dp),
-                    onClick = {navHostController.navigate(Screen.Transaction.route)},
+                    onClick = {navHostController.navigate(Screen.AddTransaction.route)},
                     colors = ButtonDefaults.buttonColors(
                         containerColor = CustomLightPurple,
                         contentColor = CustomBlackPurple
@@ -269,6 +299,7 @@ fun HomeScreen(navHostController: NavHostController) {
         }
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 fun HomeScreenPreview() {

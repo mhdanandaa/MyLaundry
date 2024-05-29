@@ -137,7 +137,7 @@ fun LoginScreen(navHostController: NavHostController) {
             ) {
                 CustomTextField(
                     label = "Email",
-                    trailing = "",
+                    trailing = {},
                     modifier = Modifier.fillMaxWidth(),
                     value = email,
                     onValueChange = {email= it},

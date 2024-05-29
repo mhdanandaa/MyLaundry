@@ -1,9 +1,11 @@
 package org.d3if3066.mylaundry.ui.screen.transaction
 
 import CustomDatePicker
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
@@ -31,9 +33,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableDoubleStateOf
@@ -62,14 +67,24 @@ import org.d3if3066.mylaundry.component.PelangganDropDown
 import org.d3if3066.mylaundry.component.PriceTextField
 import org.d3if3066.mylaundry.component.TipeDropDown
 import org.d3if3066.mylaundry.database.MyLaundryDb
+import org.d3if3066.mylaundry.navigation.Screen
 import org.d3if3066.mylaundry.ui.theme.CustomBlackPurple
 import org.d3if3066.mylaundry.ui.theme.CustomPurple
 import org.d3if3066.mylaundry.ui.theme.CustomWhite
 import org.d3if3066.mylaundry.ui.theme.MyLaundryTheme
+import org.d3if3066.mylaundry.ui.theme.focusedTextFieldText
+import org.d3if3066.mylaundry.ui.theme.textFieldContainer
+import org.d3if3066.mylaundry.ui.theme.unfocusedTextFieldText
 import org.d3if3066.mylaundry.util.ViewModelFactory
+import java.text.DecimalFormat
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.Date
 
 
-@RequiresApi(Build.VERSION_CODES.N)
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddTransactionScreen(navController: NavHostController) {
@@ -97,13 +112,14 @@ fun AddTransactionScreen(navController: NavHostController) {
             )
         }
     ) { padding ->
-        ScreenContent(Modifier.padding(padding))
+        AddTransactionScreenContent(Modifier.padding(padding), navController)
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.N)
+@SuppressLint("SimpleDateFormat")
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun ScreenContent(modifier: Modifier) {
+fun AddTransactionScreenContent(modifier: Modifier, navController: NavHostController) {
     val context = LocalContext.current
     val db = MyLaundryDb.getInstance(context)
     val factory = ViewModelFactory(
@@ -111,24 +127,27 @@ fun ScreenContent(modifier: Modifier) {
         orderDao = db.orderDao,
         customerDao = db.customerDao
     )
-    val viewModel: AddTransactionViewModel = viewModel(factory = factory)
+    val viewModel: TransactionViewModel = viewModel(factory = factory)
     val coroutineScope = rememberCoroutineScope()
     val serviceList by viewModel.serviceList.collectAsState()
     val customerList by viewModel.customerList.collectAsState()
 
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+    val current = LocalDateTime.now().format(formatter)
 
     var berat by remember { mutableStateOf("") }
     var tipeLaundry by remember { mutableStateOf("") }
     var pelanggan by remember { mutableStateOf("") }
-    var startDate by remember { mutableStateOf("") }
+    var startDate by remember { mutableStateOf(current) }
     var endDate by remember { mutableStateOf("") }
+    var customerPhone by remember { mutableStateOf("") }
     var price by remember { mutableDoubleStateOf(0.0) }
 
     val selectedService = serviceList.firstOrNull { it.name == tipeLaundry }
 
 
     val totalPrice = if (selectedService != null) {
-        berat.toDouble() * selectedService.price
+        if (berat == "" ) 0.0 else berat.toDouble() * selectedService.price
     } else {
         0.0
     }
@@ -187,7 +206,7 @@ fun ScreenContent(modifier: Modifier) {
                     textAlign = TextAlign.Center,
                 )
                 PelangganDropDown(
-                    label = "Pelanggan",
+                    label = "Nama Pelanggan",
                     trailing = "",
                     modifier = Modifier
                         .fillMaxWidth()
@@ -196,18 +215,49 @@ fun ScreenContent(modifier: Modifier) {
                     onValueChange = { pelanggan = it },
                     customerList = customerList
                 )
+                TextField(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 10.dp),
+                    value = customerPhone,
+                    onValueChange = { customerPhone = it },
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number,
+                        imeAction = ImeAction.Next
+                    ),
+                    placeholder = {
+                        Text(text = "08XXXXXXXXXX")
+                    },
+                    label = {
+                        Text(
+                            text = "Nomor HP Pelanggan (Opsional)",
+                            style = MaterialTheme.typography.labelMedium,
+                            color = CustomBlackPurple
+                        )
+                    },
+                    colors = TextFieldDefaults.colors(
+                        unfocusedPlaceholderColor = MaterialTheme.colorScheme.unfocusedTextFieldText,
+                        focusedPlaceholderColor = MaterialTheme.colorScheme.focusedTextFieldText,
+                        unfocusedContainerColor = MaterialTheme.colorScheme.textFieldContainer,
+                        focusedContainerColor = MaterialTheme.colorScheme.textFieldContainer
+                    ),
+
+
+                    )
                 Spacer(modifier = Modifier.height(20.dp))
 
                 CustomTextField(
                     label = "Berat",
-                    trailing = "",
+                    trailing = {
+                        Text(text = "Kg", color = CustomBlackPurple)
+                    },
                     modifier = Modifier.fillMaxWidth(),
                     value = berat,
                     onValueChange = { berat = it },
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number,
                         imeAction = ImeAction.Next
-                    )
+                    ),
                 )
                 Spacer(modifier = Modifier.height(20.dp))
                 TipeDropDown(
@@ -241,7 +291,11 @@ fun ScreenContent(modifier: Modifier) {
                     label = "Total Harga",
                     enabled = true,
                     value = price,
-                    onValueChange = {}
+                    onValueChange = { price = it.toDouble() },
+                    supportingText = {
+                        Text(text = "Rp. "+ DecimalFormat("#,###.##").format(
+                            selectedService?.price ?: 0)+" × " + (if (berat == "") "0" else berat) + " Kg = Rp. "+ DecimalFormat("#,###.##").format(price))
+                    }
                 )
                 Spacer(modifier = Modifier.height(20.dp))
 
@@ -252,11 +306,12 @@ fun ScreenContent(modifier: Modifier) {
                         coroutineScope.launch {
                             if (viewModel.createTransaction(
                                     customerName = pelanggan,
-                                    weight = berat.toInt(),
+                                    weight = if (berat !== "") berat.toInt() else 0,
                                     serviceName = tipeLaundry,
                                     startDate = startDate,
                                     endDate = endDate,
-                                    price = price.toInt()
+                                    price = price.toInt(),
+                                    customerPhone = customerPhone,
                                 )
                             ) {
                                 Toast.makeText(
@@ -264,6 +319,11 @@ fun ScreenContent(modifier: Modifier) {
                                     context.getString(R.string.data_added_success_message),
                                     Toast.LENGTH_SHORT
                                 ).show()
+                                navController.navigate(Screen.TransactionList.route) {
+                                    popUpTo(Screen.AddTransaction.route) {
+                                        inclusive = true
+                                    }
+                                }
                             }
                         }
                     },
@@ -277,35 +337,44 @@ fun ScreenContent(modifier: Modifier) {
                 }
                 Spacer(modifier = Modifier.height(20.dp))
 
-                Button(
-                    modifier = Modifier.fillMaxWidth(),
-                    contentPadding = PaddingValues(vertical = 13.dp),
-                    onClick = {
-                        shareData(
-                            context = context,
-                            message = context.getString(R.string.bagikan_template, pelanggan,  berat, tipeLaundry, startDate, endDate, price)
-                        )
-                    },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = CustomBlackPurple,
-                        contentColor = CustomWhite
-                    ),
-                    shape = RoundedCornerShape(size = 4.dp)
-                ) {
-                    Text(text = "Kirim", style = MaterialTheme.typography.labelMedium)
-                }
-                Spacer(modifier = Modifier.height(20.dp))
+//                Button(
+//                    modifier = Modifier.fillMaxWidth(),
+//                    contentPadding = PaddingValues(vertical = 13.dp),
+//                    onClick = {
+//                        shareData(
+//                            context = context,
+//                            message = context.getString(
+//                                R.string.bagikan_template,
+//                                pelanggan,
+//                                berat,
+//                                tipeLaundry,
+//                                startDate,
+//                                endDate,
+//                                price
+//                            )
+//                        )
+//                    },
+//                    colors = ButtonDefaults.buttonColors(
+//                        containerColor = CustomBlackPurple,
+//                        contentColor = CustomWhite
+//                    ),
+//                    shape = RoundedCornerShape(size = 4.dp)
+//                ) {
+//                    Text(text = "Kirim", style = MaterialTheme.typography.labelMedium)
+//                }
+//                Spacer(modifier = Modifier.height(20.dp))
 
             }
         }
     }
 }
+
 private fun shareData(context: Context, message: String) {
     val shareIntent = Intent(Intent.ACTION_SEND).apply {
         type = "text/plain"
         putExtra(Intent.EXTRA_TEXT, message)
     }
-    if(shareIntent.resolveActivity(context.packageManager) != null) {
+    if (shareIntent.resolveActivity(context.packageManager) != null) {
         context.startActivity(shareIntent)
     }
 }

@@ -31,8 +31,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import org.d3if3066.mylaundry.R
+import org.d3if3066.mylaundry.component.DisplayAlertDialog
 import org.d3if3066.mylaundry.database.MyLaundryDb
-import org.d3if3066.mylaundry.model.Order
+import org.d3if3066.mylaundry.navigation.Screen
 import org.d3if3066.mylaundry.util.ViewModelFactory
 
 const val KEY_ID_ORDER = "idOrder"
@@ -47,11 +48,11 @@ fun DetailTransaction(navController: NavHostController, id: Long? = null) {
         orderDao = db.orderDao,
         customerDao = db.customerDao
     )
-    val viewModel: AddTransactionViewModel = viewModel(factory = factory)
-    val coroutineScope = rememberCoroutineScope()
-    val serviceList by viewModel.serviceList.collectAsState()
-    val customerList by viewModel.customerList.collectAsState()
+    val viewModel: TransactionViewModel = viewModel(factory = factory)
+    if(id == null) return
+    val order by viewModel.getOrderDetailById(id).collectAsState()
 
+    val coroutineScope = rememberCoroutineScope()
 
     var berat by remember { mutableStateOf("") }
     var tipeLaundry by remember { mutableStateOf("") }
@@ -59,36 +60,16 @@ fun DetailTransaction(navController: NavHostController, id: Long? = null) {
     var startDate by remember { mutableStateOf("") }
     var endDate by remember { mutableStateOf("") }
     var price by remember { mutableDoubleStateOf(0.0) }
-
-    val selectedService = serviceList.firstOrNull { it.name == tipeLaundry }
-//    val customerState = viewModel.getCustomerById(order.customerId).collectAsState()
-//    val customer = customerState.value
-//
-//    val serviceState = viewModel.getServiceById(order.serviceId).collectAsState()
-//    val service = serviceState.value
-
-
-    val totalPrice = if (selectedService != null) {
-        berat.toDouble() * selectedService.price
-    } else {
-        0.0
-    }
-
-    price = totalPrice
+    var showDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(true) {
-        if(id == null) return@LaunchedEffect
-        val data = viewModel.getOrder(id) ?: return@LaunchedEffect
-//        if (customer != null) {
-//            pelanggan = customer.name.toString()
-//        }
-//        berat = data.weight.toString()
-//        if (service != null) {
-//            tipeLaundry = service.name.toString()
-//        }
-        startDate = data.startDate
-        endDate = data.endDate
-        price = data.price.toDouble()
+        if (order == null) return@LaunchedEffect
+        pelanggan = order!!.customerName
+        berat = order!!.weight.toString()
+            tipeLaundry = order!!.serviceName
+        startDate = order!!.startDate
+        endDate = order!!.endDate
+        price = order!!.price.toDouble()
 
     }
 
@@ -133,20 +114,20 @@ fun DetailTransaction(navController: NavHostController, id: Long? = null) {
                             tint = MaterialTheme.colorScheme.primary
                         )
                     }
-//                    if(id != null) {
-//                        DeleteAction {
-//                            showDialog = true
-//                        }
-//
-//                        DisplayAlertDialog(
-//                            openDialog = showDialog,
-//                            onDismissRequest = {showDialog = false}
-//                        ) {
-//                            showDialog = false
-//                            viewModel.delete(id)
-//                            navController.popBackStack()
-//                        }
-//                    }
+                    if(id != null) {
+                        DeleteAction {
+                            var showDialog = true
+                        }
+
+                        DisplayAlertDialog(
+                            openDialog = showDialog,
+                            onDismissRequest = {showDialog = false}
+                        ) {
+                            showDialog = false
+//                            viewModel.deleteOrder(order)
+                            navController.popBackStack()
+                        }
+                    }
                 }
             )
         }
