@@ -58,7 +58,7 @@ class TransactionViewModel(
             customerDao.insert(Customer(name = customerName, phone = customerPhone))
             customer = customerDao.getCustomerByName(customerName)
         } else {
-            if (customerPhone !== ""){
+            if (customerPhone !== "") {
                 customer.phone = customerPhone
                 customerDao.update(customer)
             }
@@ -90,11 +90,9 @@ class TransactionViewModel(
         return customerFlow
     }
 
-    fun getOrderDetailById(orderId: Long): StateFlow<OrderDetail?> {
-        val orderDetailFlow = MutableStateFlow<OrderDetail?>(null)
-        viewModelScope.launch {
-            orderDetailFlow.value = orderDao.getOrderDetailById(orderId)
-        }
+    fun getOrderDetailById(orderId: Long): OrderDetail? {
+        var orderDetailFlow: OrderDetail? = null
+        orderDetailFlow = orderDao.getOrderDetailById(orderId)
         return orderDetailFlow
     }
 

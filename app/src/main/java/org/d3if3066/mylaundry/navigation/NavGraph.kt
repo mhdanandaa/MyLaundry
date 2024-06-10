@@ -1,10 +1,8 @@
 package org.d3if3066.mylaundry.navigation
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -21,7 +19,6 @@ import org.d3if3066.mylaundry.database.MyLaundryDb
 import org.d3if3066.mylaundry.ui.screen.customer.AddCustomerScreen
 import org.d3if3066.mylaundry.ui.screen.customer.CustomerListScreen
 import org.d3if3066.mylaundry.ui.screen.home.HomeScreen
-import org.d3if3066.mylaundry.ui.screen.home.KEY_NEXT_PAGE
 import org.d3if3066.mylaundry.ui.screen.login.LoginScreen
 import org.d3if3066.mylaundry.ui.screen.login.LoginViewModel
 import org.d3if3066.mylaundry.ui.screen.register.RegisterScreen
@@ -85,7 +82,11 @@ fun SetupNavGraph(navHostController: NavHostController = rememberNavController()
             )
         ) { navBackStackEntry ->
             val id = navBackStackEntry.arguments?.getLong(KEY_ID_ORDER)
-            DetailTransaction(navHostController, id)
+            if (id != null) {
+                DetailTransaction(navHostController, id)
+            } else {
+                navHostController.navigate(Screen.TransactionList.route)
+            }
         }
     }
 }

@@ -2,7 +2,6 @@ package org.d3if3066.mylaundry.ui.screen.transaction
 
 import android.content.res.Configuration
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -41,7 +40,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.toLowerCase
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -50,12 +48,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import org.d3if3066.mylaundry.R
 import org.d3if3066.mylaundry.component.DisplayAlertDialog
 import org.d3if3066.mylaundry.database.MyLaundryDb
-import org.d3if3066.mylaundry.model.Order
 import org.d3if3066.mylaundry.model.OrderDetail
 import org.d3if3066.mylaundry.navigation.Screen
 import org.d3if3066.mylaundry.ui.theme.CustomPurple
@@ -65,7 +61,6 @@ import org.d3if3066.mylaundry.util.ViewModelFactory
 import java.text.DecimalFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import java.util.Locale
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
@@ -204,18 +199,17 @@ fun ListItems(
             Text(
                 text = (order?.serviceName
                     ?: "Tanpa Layanan") + " | " + order.weight.toString() + " Kg",
-//                fontWeight = FontWeight.Bold,
-                style = MaterialTheme.typography.titleMedium
+                style = MaterialTheme.typography.bodyLarge
             )
             Text(
                 text = "Mulai : " + changeDateFormat(order.startDate),
                 fontWeight = FontWeight.Light,
-                style = MaterialTheme.typography.titleSmall
+                style = MaterialTheme.typography.bodySmall
             )
             Text(
                 text = "Selesai : " + changeDateFormat(order.endDate),
                 fontWeight = FontWeight.Light,
-                style = MaterialTheme.typography.titleSmall
+                style = MaterialTheme.typography.bodySmall
             )
             Text(
                 text = "Rp. " + DecimalFormat("#,###.##").format(order.price),

@@ -37,7 +37,8 @@ interface OrderDao {
                 "`order`.endDate AS 'endDate'," +
                 "`order`.price AS 'price'," +
                 "service.name AS 'serviceName'," +
-                "customer.name AS 'customerName'  " +
+                "customer.name AS 'customerName',  " +
+                "customer.phone AS 'customerPhone'  " +
                 "FROM `order` " +
                 "INNER JOIN service ON service.id = `order`.serviceId " +
                 "INNER JOIN customer ON customer.id = `order`.customerId " +
@@ -55,12 +56,13 @@ interface OrderDao {
                 "`order`.endDate AS 'endDate'," +
                 "`order`.price AS 'price'," +
                 "service.name AS 'serviceName'," +
-                "customer.name AS 'customerName'  " +
+                "customer.name AS 'customerName',  " +
+                "customer.phone AS 'customerPhone'  " +
                 "FROM `order` " +
                 "INNER JOIN service ON service.id = `order`.serviceId " +
                 "INNER JOIN customer ON customer.id = `order`.customerId WHERE `order`.id = :id"
     )
-    suspend fun getOrderDetailById(id: Long): OrderDetail?
+    fun getOrderDetailById(id: Long): OrderDetail?
 
     @Query(
         "SELECT " +
@@ -72,7 +74,8 @@ interface OrderDao {
                 "`order`.endDate AS 'endDate'," +
                 "`order`.price AS 'price'," +
                 "service.name AS 'serviceName'," +
-                "customer.name AS 'customerName'  " +
+                "customer.name AS 'customerName',  " +
+                "customer.phone AS 'customerPhone'  " +
                 "FROM `order` " +
                 "INNER JOIN service ON service.id = `order`.serviceId " +
                 "INNER JOIN customer ON customer.id = `order`.customerId "

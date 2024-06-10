@@ -1,13 +1,21 @@
 package org.d3if3066.mylaundry.ui.screen.transaction
 
-import android.widget.Toast
+import android.content.Intent
+import android.net.Uri
+import android.os.Build
+import androidx.annotation.RequiresApi
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.outlined.Check
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -17,30 +25,69 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableDoubleStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import org.d3if3066.mylaundry.R
-import org.d3if3066.mylaundry.component.DisplayAlertDialog
 import org.d3if3066.mylaundry.database.MyLaundryDb
-import org.d3if3066.mylaundry.navigation.Screen
+import org.d3if3066.mylaundry.ui.screen.customer.changePhoneFormat
+import org.d3if3066.mylaundry.ui.theme.CustomBlackPurple
+import org.d3if3066.mylaundry.ui.theme.CustomPurple
+import org.d3if3066.mylaundry.ui.theme.CustomWhite
 import org.d3if3066.mylaundry.util.ViewModelFactory
+import java.text.DecimalFormat
 
 const val KEY_ID_ORDER = "idOrder"
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DetailTransaction(navController: NavHostController, id: Long? = null) {
+fun DetailTransaction(navController: NavHostController, id: Long) {
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                navigationIcon = {
+                    IconButton(
+                        onClick = { navController.popBackStack() }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.ArrowBack,
+                            contentDescription = stringResource(R.string.kembali),
+                            tint = Color.White
+                        )
+                    }
+                },
+                title = { Text(text = "Detail Pesanan") },
+                colors = TopAppBarDefaults.mediumTopAppBarColors(
+                    //Untuk Backround
+                    containerColor = CustomPurple,
+                    //Untuk Judul
+                    titleContentColor = CustomWhite
+                )
+            )
+        },
+    ) { padding ->
+        DetailTransactionScreenContent(
+            modifier = Modifier.padding(padding),
+            id = id
+        )
+    }
+
+
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+@Composable
+fun DetailTransactionScreenContent(
+    modifier: Modifier,
+    id: Long
+) {
     val context = LocalContext.current
     val db = MyLaundryDb.getInstance(context)
     val factory = ViewModelFactory(
@@ -49,120 +96,146 @@ fun DetailTransaction(navController: NavHostController, id: Long? = null) {
         customerDao = db.customerDao
     )
     val viewModel: TransactionViewModel = viewModel(factory = factory)
-    if(id == null) return
-    val order by viewModel.getOrderDetailById(id).collectAsState()
 
-    val coroutineScope = rememberCoroutineScope()
-
-    var berat by remember { mutableStateOf("") }
-    var tipeLaundry by remember { mutableStateOf("") }
-    var pelanggan by remember { mutableStateOf("") }
-    var startDate by remember { mutableStateOf("") }
-    var endDate by remember { mutableStateOf("") }
-    var price by remember { mutableDoubleStateOf(0.0) }
-    var showDialog by remember { mutableStateOf(false) }
-
-    LaunchedEffect(true) {
-        if (order == null) return@LaunchedEffect
-        pelanggan = order!!.customerName
-        berat = order!!.weight.toString()
-            tipeLaundry = order!!.serviceName
-        startDate = order!!.startDate
-        endDate = order!!.endDate
-        price = order!!.price.toDouble()
-
-    }
-
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                navigationIcon = {
-                    IconButton(onClick = {navController.popBackStack() })
-                    {
-                        Icon(
-                            imageVector = Icons.Filled.ArrowBack,
-                            contentDescription = stringResource(id = R.string.kembali),
-                            tint = MaterialTheme.colorScheme.primary
-                        )
-                    }
-                },
-                title = {
-                    if(id == null) {
-                        Text(text = stringResource(id = R.string.tambah_transaksi))
-                    }
-                    else {
-                        Text(text = stringResource(id = R.string.edit_transaksi))
-                    }
-                },
-                colors = TopAppBarDefaults.mediumTopAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.primary
-                ),
-                actions = {
-                    IconButton(onClick = {
-                        if (pelanggan == "" || berat == "" || tipeLaundry == "") {
-                            Toast.makeText(context, R.string.invalid, Toast.LENGTH_LONG).show()
-                            return@IconButton
-                        }
-                        //
-                        navController.popBackStack()
-                    })
-                    {
-                        Icon(
-                            imageVector = Icons.Outlined.Check,
-                            contentDescription = stringResource(id = R.string.simpan),
-                            tint = MaterialTheme.colorScheme.primary
-                        )
-                    }
-                    if(id != null) {
-                        DeleteAction {
-                            var showDialog = true
-                        }
-
-                        DisplayAlertDialog(
-                            openDialog = showDialog,
-                            onDismissRequest = {showDialog = false}
-                        ) {
-                            showDialog = false
-//                            viewModel.deleteOrder(order)
-                            navController.popBackStack()
-                        }
-                    }
-                }
-            )
-        }
+    val orderDetail = viewModel.getOrderDetailById(id)
+    if (orderDetail == null) Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
-            padding -> FormEditTransaksi(modifier = Modifier.padding(padding))
-    }
-}
-
-@Composable
-fun FormEditTransaksi(modifier: Modifier) {
-
-}
-@Composable
-fun DeleteAction(delete: () -> Unit) {
-    var expanded by remember { mutableStateOf(false) }
-
-    IconButton(onClick = {expanded = true }) {
-        Icon(
-            imageVector = Icons.Filled.MoreVert,
-            contentDescription = stringResource(id = R.string.lainnya),
-            tint = MaterialTheme.colorScheme.primary
-        )
-        DropdownMenu(
-            expanded = expanded,
-            onDismissRequest = {expanded = false }
+        Text(text = "Data Tidak Ditemukan")
+    } else
+        Column(
+            modifier = modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            DropdownMenuItem(
-                text = {
-                    Text(text = stringResource(id = R.string.hapus))
-                },
-                onClick = {
-                    expanded = false
-                    delete()
+            Column {
+                Text(
+                    text = "Nama Pelanggan",
+                    color = Color.Gray,
+                    style = MaterialTheme.typography.bodySmall
+                )
+                Text(text = orderDetail.customerName, style = MaterialTheme.typography.titleLarge)
+            }
+            Column {
+                Text(
+                    text = "Nomor Handphone Pelanggan",
+                    color = Color.Gray,
+                    style = MaterialTheme.typography.bodySmall
+                )
+                Text(
+                    text = if (orderDetail.customerPhone != "") orderDetail.customerPhone else "Tidak Ada",
+                    style = MaterialTheme.typography.titleLarge
+                )
+
+            }
+            LazyVerticalGrid(modifier = Modifier.fillMaxWidth(), columns = GridCells.Fixed(2)) {
+                item {
+                    Column {
+                        Text(
+                            text = "Tanggal Pengantaran",
+                            color = Color.Gray,
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                        Text(
+                            text = changeDateFormat(orderDetail.startDate),
+                            style = MaterialTheme.typography.titleLarge
+                        )
+                    }
                 }
-            )
+                item {
+                    Column {
+                        Text(
+                            text = "Tanggal Pengambilan",
+                            color = Color.Gray,
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                        Text(
+                            text = changeDateFormat(orderDetail.endDate),
+                            style = MaterialTheme.typography.titleLarge
+                        )
+                    }
+                }
+            }
+            Column {
+                Text(
+                    text = "Jenis Layanan Laundry",
+                    color = Color.Gray,
+                    style = MaterialTheme.typography.bodySmall
+                )
+                Text(text = orderDetail.serviceName, style = MaterialTheme.typography.titleLarge)
+            }
+            Column {
+                Text(
+                    text = "Berat Laundry",
+                    color = Color.Gray,
+                    style = MaterialTheme.typography.bodySmall
+                )
+                Text(
+                    text = orderDetail.weight.toString() + " Kg",
+                    style = MaterialTheme.typography.titleLarge
+                )
+            }
+            Column {
+                Text(
+                    text = "Harga Total",
+                    color = Color.Gray,
+                    style = MaterialTheme.typography.bodySmall
+                )
+                Text(
+                    text = "Rp. " + DecimalFormat("#,###.##").format(orderDetail.price),
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = Color.Red
+                )
+            }
+            if (orderDetail.customerPhone != "") {
+                Spacer(modifier = Modifier.padding(2.dp))
+                Button(
+                    colors = ButtonDefaults.buttonColors(containerColor = CustomPurple),
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = {
+                        context.startActivity(
+                            Intent(
+                                Intent.ACTION_VIEW,
+                                Uri.parse(
+                                    "https://api.whatsapp.com/send?phone=" + changePhoneFormat(
+                                        orderDetail.customerPhone
+                                    ) + "&text=" + context.getString( R.string.bagikan_template,
+                                        orderDetail.customerName,
+                                        orderDetail.weight.toString(),
+                                        orderDetail.serviceName,
+                                        changeDateFormat(orderDetail.startDate),
+                                        changeDateFormat(orderDetail.endDate),
+                                        orderDetail.price.toFloat())
+                                )
+                            )
+                        )
+                    }) {
+                    Text(text = "Chat Whatsapp")
+                }
+            }
+            Button(
+                modifier = Modifier.fillMaxWidth(),
+                onClick = {
+                    shareData(
+                        context = context,
+                        message = context.getString(
+                            R.string.bagikan_template,
+                            orderDetail.customerName,
+                            orderDetail.weight.toString(),
+                            orderDetail.serviceName,
+                            changeDateFormat(orderDetail.startDate),
+                            changeDateFormat(orderDetail.endDate),
+                            orderDetail.price.toFloat()
+                        )
+                    )
+                },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = CustomBlackPurple,
+                    contentColor = CustomWhite
+                ),
+            ) {
+                Text(text = "Bagikan", style = MaterialTheme.typography.labelMedium)
+            }
         }
-    }
 }
